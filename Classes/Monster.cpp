@@ -26,6 +26,11 @@ void Monster::BindScene(cocos2d::Scene* scene)
 	myScene = scene;
 }
 
+void Monster::BindBackground(cocos2d::Sprite* sprite)
+{
+	background = sprite;
+}
+
 float Monster::GetDistanceForMove()
 {
 	return distanceForMove;
@@ -70,9 +75,9 @@ void Monster::Wait(cocos2d::Sprite* player)
 void Monster::Move(cocos2d::Sprite* player)
 {
 	auto offset = player->getPosition() - this->getPosition(); //从怪物位置指向玩家
-	auto destination = offset * speed / distanceFromPlayer + this->getPosition(); //加到怪物位置，得目标位置
-	auto Action = cocos2d::MoveTo::create(0.5, destination);
-	this->runAction(cocos2d::Sequence::create(Action, nullptr)); //怪物移动
+	auto destination = offset * speed / distanceFromPlayer;
+	auto Action = cocos2d::MoveBy::create(0.5, destination);
+	this->runAction(Action); //怪物移动
 }
 
 void Monster::Attack(cocos2d::Sprite* player)
@@ -85,13 +90,19 @@ void Monster::Attack(cocos2d::Sprite* player)
 		bullet->setPosition(this->getPosition());
 		myScene->addChild(bullet);
 
+//		auto Body = PhysicsBody::createBox(bullet->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
+//		Body->setDynamic(false);
+//		Body->setContactTestBitmask(0xFFFFFFFF);
+//		bullet->setPhysicsBody(Body);
+//		bullet->setTag(BULLET_TAG);
+
 		auto offset = player->getPosition() - this->getPosition(); //从怪物位置指向玩家
-		auto destination = offset * distanceForAttack / distanceFromPlayer + this->getPosition(); //射程为distanceFromAttack
-		auto Move = cocos2d::MoveTo::create(1.0, destination);
+		auto destination = offset * distanceForAttack / distanceFromPlayer; //射程为distanceFromAttack
+		auto Move = cocos2d::MoveBy::create(1.0, destination);
 		auto Remove = cocos2d::RemoveSelf::create();
 		bullet->runAction(cocos2d::Sequence::create(Move, Remove, nullptr));
 		auto disappear = [this, bullet](float) {
-			bullet->removeFromParent();
+			bullet->removeFromParentAndCleanup(true);
 		};
 		bullet->scheduleOnce(disappear, 1.0, "disappear"); //一秒（即动画完毕）后回收bullet内存
 	}
@@ -105,7 +116,7 @@ void Monster::Reset()
 {
 	//随机位置
 	float minX = getContentSize().width, minY = getContentSize().height;
-	float maxX = 480 - minX, maxY = 320 - minY; //窗口大小还是宏定义吧
+	float maxX = background->getContentSize().width - minX, maxY = background->getContentSize().height - minY;
 	float randomX = (rand() % static_cast<int>(maxX - minX)) + rand() / static_cast<float>(maxX) + minX;
 	float randomY = (rand() % static_cast<int>(maxY - minY)) + rand() / static_cast<float>(maxY) + minY;
 	setPosition(randomX, randomY);
@@ -144,51 +155,4 @@ void Monster::update(float dt)
 	else {
 		Wait(closestPlayer);
 	}
-}
-
-/////////////////////////////////////////
-
-bool MonsterManager::init()
-{
-	createMonsters();
-	this->scheduleUpdate();
-	return true;
-}
-
-void MonsterManager::createMonsters()
-{
-	//	srand((unsigned)time(NULL)); 创建ai玩家时调用了
-	Monster* monster = NULL;
-	for (int i = 0; i < MONSTER_AMOUNT; i++) {
-		monster = Monster::create();
-		monster->bindSprite(cocos2d::Sprite::create("5.png"));
-		monster->Reset(); //随机坐标
-		this->addChild(monster);
-		vecMonsters.push_back(monster);
-	}
-}
-
-void MonsterManager::BindPlayers(std::vector<Player*> sprites)
-{
-	for (int i = 0; i < vecMonsters.size(); i++) {
-		vecMonsters[i]->BindPlayers(sprites);
-	}
-}
-
-void MonsterManager::BindAIPlayers(std::vector<AIPlayer*> sprites)
-{
-	for (int i = 0; i < vecMonsters.size(); i++) {
-		vecMonsters[i]->BindAIPlayers(sprites);
-	}
-}
-
-void MonsterManager::BindScene(cocos2d::Scene* scene)
-{
-	for (int i = 0; i < vecMonsters.size(); i++) {
-		vecMonsters[i]->BindScene(scene);
-	}
-}
-
-std::vector<Monster*> MonsterManager::GetVecMonsters() {
-	return vecMonsters;
 }
