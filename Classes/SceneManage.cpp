@@ -42,18 +42,16 @@ bool MySecondScene::init()
 
 	Size VisibleSize = Director::getInstance()->getVisibleSize();
 
+	//取随机数种子
+	srand((unsigned int)time(NULL));
+
+	//背景
 	initBG();
 	initIF();
 	initLABEL();
 	m_player->setPosition(Vec2(240, 160));
 	this->addChild(m_player);
 
-
-	///////////////////////////////////////////////////////////////////
-
-	//随机位置
-	srand((unsigned)time(NULL));
-	float minX, minY, maxX, maxY, randomX, randomY;
 	//创建ai玩家
 	for (int i = 0; i < PLAYER_AMOUNT - humanPlayerAmount; i++) {
 		vecAIPlayer.push_back(AIPlayer::create());
@@ -65,11 +63,8 @@ bool MySecondScene::init()
 		vecAIPlayer[i]->setPhysicsBody(aiPlayerBody);
 		vecAIPlayer[i]->setTag(AIPLAYER_TAG + i);
 		mapAIPlayerTag.insert(std::pair<int, AIPlayer*>(AIPLAYER_TAG + i, vecAIPlayer[i]));
+		vecAIPlayer[i]->SetNum(i);
 
-		//minX = vecAIPlayer[i]->getContentSize().width, minY = vecAIPlayer[i]->getContentSize().height;
-		//maxX = start_Page->getContentSize().width - minX, maxY = start_Page->getContentSize().height - minY;
-		//randomX = (rand() % static_cast<int>(maxX - minX)) + rand() / static_cast<float>(maxX) + minX;
-		//randomY = (rand() % static_cast<int>(maxY - minY)) + rand() / static_cast<float>(maxY) + minY;
 		vecAIPlayer[i]->setPosition(Vec2(CCRANDOM_0_1() * (start_Page->getContentSize().width - 200) + 100, CCRANDOM_0_1() * (start_Page->getContentSize().height - 200) + 100));
 
 		vecAIPlayer[i]->BindScene(this);
@@ -80,7 +75,8 @@ bool MySecondScene::init()
 	for (int i = 0; i < MONSTER_AMOUNT; i++) {
 		vecMonster.push_back(Monster::create());
 		vecMonster[i]->bindSprite(Sprite::create("5.png"));
-
+		vecMonster[i]->retain();
+		
 		auto Body = PhysicsBody::createBox(vecMonster[i]->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
 		Body->setDynamic(false);
 		Body->setContactTestBitmask(0xFFFFFFFF);
@@ -118,7 +114,6 @@ bool MySecondScene::init()
 
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> keyMap;
 
-
 	//键盘监听
 	auto listener = EventListenerKeyboard::create();
 	listener->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event* event) {
@@ -149,6 +144,33 @@ bool MySecondScene::init()
 		if (keyCode == EventKeyboard::KeyCode::KEY_ALT) {
 
 		}//对应键盘操作播放或停止不同的精灵帧
+		if (keyCode == EventKeyboard::KeyCode::KEY_ALT) {
+			//想写翻转 但缺少素材
+		}
+		if (keyCode == EventKeyboard::KeyCode::KEY_X) {//治疗键
+			if (Pill != nullptr) {
+				m_player->AddHP();
+				m_player->alter_blood(m_blood);
+				Pill->removeFromParentAndCleanup(true);
+				Pill = nullptr;
+			}
+		}
+		if (keyCode == EventKeyboard::KeyCode::KEY_1) {
+			//切换武器
+			if (Gun1 != nullptr) {
+				guntype = 2;
+				bagblock3->initWithFile("bagblock.png");
+				bagblock1->initWithFile("bagblock_ing.png");
+			}
+		}
+		if (keyCode == EventKeyboard::KeyCode::KEY_2) {
+			//切换武器
+			if (Gun2 != nullptr) {
+				guntype = 1;
+				bagblock1->initWithFile("bagblock.png");
+				bagblock3->initWithFile("bagblock_ing.png");
+			}
+		}
 	};
 
 	listener->onKeyReleased = [=](EventKeyboard::KeyCode keyCode, Event* event) {
@@ -204,17 +226,7 @@ bool MySecondScene::init()
 			}
 			keys[EventKeyboard::KeyCode::KEY_A] = false;
 		}
-		if (keyCode == EventKeyboard::KeyCode::KEY_ALT) {
-			//想写翻转 但缺少素材
-		}
-		if (keyCode == EventKeyboard::KeyCode::KEY_X) {//治疗键
-			if (Pill != nullptr) {
-				m_player->AddHP();
-			    m_player->alter_blood(m_blood);
-			    Pill->removeFromParentAndCleanup(true);
-			    Pill = nullptr;
-			}
-		}
+		
 	};
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
@@ -252,7 +264,7 @@ bool MyThirdScene::init()
 		return false;
 	}
 
-	start_Page = Sprite::create("big2xx.png");
+	start_Page = Sprite::create("startpage.png");
 	start_Page->setPosition(0, 0);
 	this->addChild(start_Page, 0);
 
@@ -301,7 +313,7 @@ bool MyFifthScene::init()
 		return false;
 	}
 
-	start_Page = Sprite::create("big2xx.png");
+	start_Page = Sprite::create("startpage.png");
 	start_Page->setPosition(0, 0);
 	this->addChild(start_Page, 0);
 
@@ -356,7 +368,7 @@ bool MyForthScene::init()
 
 	Size VisibleSize = Director::getInstance()->getVisibleSize();
 
-	start_Page = Sprite::create("big2xx.png");
+	start_Page = Sprite::create("startpage.png");
 	start_Page->setPosition(0, 0);
 	this->addChild(start_Page, 0);
 
@@ -452,8 +464,6 @@ bool MySecondScene::onContactBegin(cocos2d::PhysicsContact& contact)
 		//玩家子弹和怪物
 		else if (PLAYER_BULLET_TAG == tagA && MONSTER_TAG <= tagB && MONSTER_TAG + MONSTER_AMOUNT > tagB) {
 			nodeA->removeFromParentAndCleanup(true);
-
-			//不知道为什么打不到怪，明明逻辑和ai的一模一样
 			auto iter = mapMonsterTag.find(tagB);
 			if (iter != mapMonsterTag.end()) {
 				iter->second->isHit();
@@ -463,7 +473,6 @@ bool MySecondScene::onContactBegin(cocos2d::PhysicsContact& contact)
 		}
 		else if (PLAYER_BULLET_TAG == tagB && MONSTER_TAG <= tagA && MONSTER_TAG + MONSTER_AMOUNT > tagA) {
 			nodeB->removeFromParentAndCleanup(true);
-
 			auto iter = mapMonsterTag.find(tagA);
 			if (iter != mapMonsterTag.end()) {
 				iter->second->isHit();
@@ -479,10 +488,10 @@ bool MySecondScene::onContactBegin(cocos2d::PhysicsContact& contact)
 			nodeB->removeFromParentAndCleanup(true);
 		}
 		//ai玩家子弹和箱子
-		else if (AIPLAYER_BULLET_TAG <= tagA && AIPLAYER_BULLET_TAG + PLAYER_AMOUNT > tagA && BRICK_TAG <= tagB && BRICK_TAG + BRICK_AMOUNT > tagB) {
+		else if (AIPLAYER_BULLET_TAG == tagA && BRICK_TAG <= tagB && BRICK_TAG + BRICK_AMOUNT > tagB) {
 			nodeA->removeFromParentAndCleanup(true);
 		}
-		else if (AIPLAYER_BULLET_TAG <= tagB && AIPLAYER_BULLET_TAG + PLAYER_AMOUNT > tagB && BRICK_TAG <= tagA && BRICK_TAG + BRICK_AMOUNT > tagA) {
+		else if (AIPLAYER_BULLET_TAG == tagB && BRICK_TAG <= tagA && BRICK_TAG + BRICK_AMOUNT > tagA) {
 			nodeB->removeFromParentAndCleanup(true);
 		}
 		//玩家子弹和箱子
@@ -496,26 +505,26 @@ bool MySecondScene::onContactBegin(cocos2d::PhysicsContact& contact)
 		else if (BRICK_TAG <= tagA && BRICK_TAG + BRICK_AMOUNT > tagA && MONSTER_TAG <= tagB && MONSTER_TAG + MONSTER_AMOUNT > tagB) {
 			auto iter = mapMonsterTag.find(tagB);
 			if (iter != mapMonsterTag.end()) {
-				//	iter->second->Wait();
+				iter->second->Stop(true);
 			}
 		}
 		else if (BRICK_TAG <= tagB && BRICK_TAG + BRICK_AMOUNT > tagB && MONSTER_TAG <= tagA && MONSTER_TAG + MONSTER_AMOUNT > tagA) {
 			auto iter = mapMonsterTag.find(tagA);
 			if (iter != mapMonsterTag.end()) {
-				iter->second->Wait();
+				iter->second->Stop(true);
 			}
 		}
 		//ai玩家和箱子
 		else if (BRICK_TAG <= tagA && BRICK_TAG + BRICK_AMOUNT > tagA && AIPLAYER_TAG <= tagB && AIPLAYER_TAG + PLAYER_AMOUNT > tagB) {
 			auto iter = mapAIPlayerTag.find(tagB);
 			if (iter != mapAIPlayerTag.end()) {
-				//	iter->second->Wait();
+				iter->second->Stop(true);
 			}
 		}
 		else if (BRICK_TAG <= tagB && BRICK_TAG + BRICK_AMOUNT > tagB && AIPLAYER_TAG <= tagA && AIPLAYER_TAG + PLAYER_AMOUNT > tagA) {
 			auto iter = mapAIPlayerTag.find(tagA);
 			if (iter != mapAIPlayerTag.end()) {
-				iter->second->Wait();
+				iter->second->Stop(true);
 			}
 		}
 		//玩家与箱子/边界
@@ -600,6 +609,26 @@ bool MySecondScene::onContactBegin(cocos2d::PhysicsContact& contact)
 				nodeB->removeFromParentAndCleanup(true);
 				this->addChild(Pill);
 			}
+		}
+		else if (BULLET1_TAG <= tagA && BULLET1_TAG + BULLET1_AMOUNT > tagA && PLAYER_TAG <= tagB && PLAYER_TAG + PLAYER_AMOUNT > tagB) {
+		      nodeA->removeFromParentAndCleanup(true);
+			  m_player->gain_bullet1();
+		      m_player->print_rest_bullet1(BULLET1);
+		}
+		else if (BULLET1_TAG <= tagB && BULLET1_TAG + BULLET1_AMOUNT > tagB && PLAYER_TAG <= tagA && PLAYER_TAG + PLAYER_AMOUNT > tagA) {
+		      nodeB->removeFromParentAndCleanup(true);
+			  m_player->gain_bullet1();
+		      m_player->print_rest_bullet1(BULLET1);
+		}
+		else if (BULLET2_TAG <= tagA && BULLET2_TAG + BULLET2_AMOUNT > tagA && PLAYER_TAG <= tagB && PLAYER_TAG + PLAYER_AMOUNT > tagB) {
+		      nodeA->removeFromParentAndCleanup(true);
+			  m_player->gain_bullet2();
+		      m_player->print_rest_bullet2(BULLET2);
+		}
+		else if (BULLET2_TAG <= tagB && BULLET2_TAG + BULLET2_AMOUNT > tagB && PLAYER_TAG <= tagA && PLAYER_TAG + PLAYER_AMOUNT > tagA) {
+		      nodeB->removeFromParentAndCleanup(true);
+			  m_player->gain_bullet2();
+		      m_player->print_rest_bullet2(BULLET2);
 		}
 
 	}

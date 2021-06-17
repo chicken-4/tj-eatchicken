@@ -18,7 +18,7 @@ void TollgateScene::initBG()
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 
 	//´óµØÍ¼
-	start_Page = Sprite::create("big2xx.png");
+	start_Page = Sprite::create("startpage.png");
 	start_Page->setPosition(0, 0);
 	this->addChild(start_Page, 0);
 

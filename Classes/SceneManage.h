@@ -10,12 +10,16 @@
 #define GUN1_TAG   100
 #define GUN2_TAG   110
 #define PILL_TAG   120
+#define BULLET1_TAG   140
+#define BULLET2_TAG   160
 
 #define BRICK_AMOUNT  399
 #define GRASS_AMOUNT 200
 #define GUN1_AMOUNT  10
 #define GUN2_AMOUNT 10
 #define PILL_AMOUNT 20
+#define BULLET1_AMOUNT 20
+#define BULLET2_AMOUNT 20
 
 using namespace cocos2d;
 class Player;
@@ -42,11 +46,15 @@ public:
 	cocos2d::SpriteBatchNode* gress;
 	cocos2d::SpriteBatchNode* gun1;
 	cocos2d::SpriteBatchNode* gun2;
+	cocos2d::SpriteBatchNode* bullet1;
+	cocos2d::SpriteBatchNode* bullet2;
+
 	cocos2d::SpriteBatchNode* pill;
 	void keyPressedDuration_W();
 	void keyPressedDuration_A();
 	void keyPressedDuration_S();
 	void keyPressedDuration_D();
+	void keyPressedDuration_Scene(float offsetX, float offsetY);
 
 	bool onContactBegin(cocos2d::PhysicsContact& contact);
 	bool onContactSeparate(cocos2d::PhysicsContact& contact);
@@ -63,14 +71,20 @@ private:
 	Sprite* ball;
 	Sprite* Gun1;
 	Sprite* Gun2;
+	Sprite* bullet;
 	Sprite* Pill;
+	Sprite* bagblock1;
+	Sprite* bagblock2;
+	Sprite* bagblock3;
 	Label* blood_label;
 	Label* score_label;
 	Label* Score;
+	Label* BULLET1;
+	Label* BULLET2;
 	Label* time_label;
 	Sprite* Small_map;
-
 	bool hasDead = false;
+	int guntype=0;
 private:
 	std::vector<Player*> vecPlayer;
 	std::vector<AIPlayer*> vecAIPlayer;
@@ -124,6 +138,7 @@ public:
 	void EnterSecondScene(Ref* pSender);//Ö÷µØÍ¼
 	void EXIT(Ref* pSender);//ÍË³ö
 	Sprite* start_Page;
+
 };
 
 
