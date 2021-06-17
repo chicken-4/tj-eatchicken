@@ -25,7 +25,7 @@
 
 cmake_minimum_required(VERSION 3.6)
 
-set(APP_NAME HelloWorld)
+set(APP_NAME tj-eatchicken)
 
 project(${APP_NAME})
 
@@ -35,7 +35,7 @@ if(XCODE)
     endif()
 endif()
 
-if(NOT DEFINED BUILD_ENGINE_DONE) # to test HelloWorld into root project
+if(NOT DEFINED BUILD_ENGINE_DONE) # to test tjj into root project
     set(COCOS2DX_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cocos2d)
     set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
 
@@ -57,11 +57,32 @@ endif()
 # add cross-platforms source files and header files 
 list(APPEND GAME_SOURCE
      Classes/AppDelegate.cpp
-     Classes/HelloWorldScene.cpp
+     Classes/AIPlayer.cpp
+     Classes/AnimationUtil.cpp
+     Classes/AppDelegate.cpp
+     Classes/Entity.cpp
+     Classes/Monster.cpp
+     Classes/MyFifthScene.cpp
+     Classes/MyForthScene.cpp
+     Classes/MySecondScene.cpp
+     Classes/MyThirdScene.cpp
+     Classes/Player.cpp
+     Classes/SceneManage.cpp
+     Classes/TimeCounter.cpp
+     Classes/TollgateScene.cpp
+     Classes/TollgateScene_sub.cpp
      )
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
-     Classes/HelloWorldScene.h
+     Classes/AIPlayer.h
+     Classes/AnimationUtil.h
+     Classes/AppDelegate.h
+     Classes/Entity.h
+     Classes/Monster.h
+     Classes/Player.h
+     Classes/SceneManage.h
+     Classes/TimeCounter.h
+     Classes/TollgateScene.h
      )
 
 if(ANDROID)
