@@ -8,7 +8,7 @@
 #include "AIPlayer.h"
 
 #define MONSTER_TAG  30 //30-59
-#define BULLET_TAG   01
+#define MONSTER_BULLET_TAG   01
 
 #define MONSTER_AMOUNT 30
 #define MONSTER_HP 3
@@ -30,7 +30,7 @@ public:
     bool isGoingToMove();
     bool isGoingToAttack();
 
-    void Wait(cocos2d::Sprite* player);
+    void Wait();
     void Move(cocos2d::Sprite* player); //靠近玩家
     void Attack(cocos2d::Sprite* player); //攻击玩家
 
@@ -45,8 +45,7 @@ private:
     const float distanceForMove = 500;
     const float distanceForAttack = 100; //与子弹射程相同
     const float speed = 0.5; //移动速度（每0.5秒）
-    const int shootGap = 30;//子弹发射间隔（每shootGap帧发射一个子弹）
-    int count; //辅助控制子弹发射间隔
+    bool shoot = true;
     int hp = MONSTER_HP; //血量
     cocos2d::Scene* myScene;
     cocos2d::Sprite* background;

@@ -2,7 +2,6 @@
 
 bool Monster::init()
 {
-	count = 0;
 	this->scheduleUpdate();
 	return true;
 }
@@ -44,7 +43,7 @@ float Monster::GetDistanceForAttack()
 cocos2d::Sprite* Monster::GetDistance()
 {
 	cocos2d::Sprite* closestPlayer = NULL;
-	distanceFromPlayer = 1000; //初始化 使其比所有的距离都远
+	distanceFromPlayer = 100000; //初始化 使其比所有的距离都远
 	float tempDistance;
 	cocos2d::Vec2 offset;
 	for (int i = 0; i < vecPlayers.size(); i++) {
@@ -67,7 +66,7 @@ bool Monster::isGoingToAttack()
 	return distanceFromPlayer <= distanceForAttack;
 }
 
-void Monster::Wait(cocos2d::Sprite* player)
+void Monster::Wait()
 {
 	//没啥要干的
 }
@@ -82,19 +81,19 @@ void Monster::Move(cocos2d::Sprite* player)
 
 void Monster::Attack(cocos2d::Sprite* player)
 {
-	//count控制子弹发射间隔（每50帧）
-	if (count >= shootGap) {
-		count = 0; //重置
+	if (shoot) {
+		shoot = !shoot;
+
 		//创建一个子弹
 		auto bullet = Sprite::create("ball.png");
 		bullet->setPosition(this->getPosition());
 		myScene->addChild(bullet);
 
-//		auto Body = PhysicsBody::createBox(bullet->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
-//		Body->setDynamic(false);
-//		Body->setContactTestBitmask(0xFFFFFFFF);
-//		bullet->setPhysicsBody(Body);
-//		bullet->setTag(BULLET_TAG);
+		auto Body = PhysicsBody::createBox(bullet->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
+		Body->setDynamic(false);
+		Body->setContactTestBitmask(0xFFFFFFFF);
+		bullet->setPhysicsBody(Body);
+		bullet->setTag(MONSTER_BULLET_TAG);
 
 		auto offset = player->getPosition() - this->getPosition(); //从怪物位置指向玩家
 		auto destination = offset * distanceForAttack / distanceFromPlayer; //射程为distanceFromAttack
@@ -105,9 +104,11 @@ void Monster::Attack(cocos2d::Sprite* player)
 			bullet->removeFromParentAndCleanup(true);
 		};
 		bullet->scheduleOnce(disappear, 1.0, "disappear"); //一秒（即动画完毕）后回收bullet内存
-	}
-	else {
-		count++;
+
+		auto changeShoot = [this](float) {
+			shoot = !shoot;
+		};
+		this->scheduleOnce(changeShoot, 0.3, "changeShoot"); //每0.3秒发射一颗子弹
 	}
 }
 
@@ -115,18 +116,14 @@ void Monster::Attack(cocos2d::Sprite* player)
 void Monster::Reset()
 {
 	//随机位置
-	float minX = getContentSize().width, minY = getContentSize().height;
-	float maxX = background->getContentSize().width - minX, maxY = background->getContentSize().height - minY;
-	float randomX = (rand() % static_cast<int>(maxX - minX)) + rand() / static_cast<float>(maxX) + minX;
-	float randomY = (rand() % static_cast<int>(maxY - minY)) + rand() / static_cast<float>(maxY) + minY;
-	setPosition(randomX, randomY);
+	background = Sprite::create("big2xx.png");
+	background->setPosition(background->getContentSize().width / 2 + 25, background->getContentSize().height / 2);
+	setPosition(Vec2(CCRANDOM_0_1() * (background->getContentSize().width - 200) + 100, CCRANDOM_0_1() * (background->getContentSize().height - 200) + 100));
 }
 
 void Monster::isHit()
 {
 	if (!isDead()) {
-		//碰撞检测
-
 		hp--;
 	}
 }
@@ -134,6 +131,7 @@ void Monster::isHit()
 bool Monster::isDead()
 {
 	if (0 >= hp) {
+		removeFromParent();
 		hp = MONSTER_HP;
 		return true;
 	}
@@ -153,6 +151,6 @@ void Monster::update(float dt)
 		Attack(closestPlayer);
 	}
 	else {
-		Wait(closestPlayer);
+		Wait();
 	}
 }

@@ -1,5 +1,3 @@
-#if 1
-
 #include "AIPlayer.h"
 
 bool AIPlayer::init()
@@ -20,6 +18,11 @@ void AIPlayer::BindScene(cocos2d::Scene* scene)
 	myScene = scene;
 }
 
+void AIPlayer::SetNum(const int i)
+{
+	num = i;
+}
+
 float AIPlayer::GetDistanceForAttack()
 {
 	return distanceForAttack;
@@ -28,7 +31,7 @@ float AIPlayer::GetDistanceForAttack()
 Monster* AIPlayer::GetDistance()
 {
 	Monster* closestMonster = NULL;
-	distanceFromMonster = 1000; //初始化 使其比所有的距离都远
+	distanceFromMonster = 100000; //初始化 使其比所有的距离都远
 	float tempDistance;
 	cocos2d::Vec2 offset;
 	for (int i = 0; i < vecMonsters.size(); i++) {
@@ -44,6 +47,11 @@ Monster* AIPlayer::GetDistance()
 bool AIPlayer::isGoingToAttack()
 {
 	return distanceFromMonster <= distanceForAttack;
+}
+
+void AIPlayer::Wait()
+{
+
 }
 
 void AIPlayer::Move(Monster* monster)
@@ -65,11 +73,11 @@ void AIPlayer::Attack(Monster* monster)
 		bullet->setPosition(this->getPosition());
 		myScene->addChild(bullet);
 
-//		auto Body = PhysicsBody::createBox(bullet->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
-//		Body->setDynamic(false);
-//		Body->setContactTestBitmask(0xFFFFFFFF);
-//		bullet->setPhysicsBody(Body);
-//		bullet->setTag(BULLET_TAG);
+		auto Body = PhysicsBody::createBox(bullet->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
+		Body->setDynamic(false);
+		Body->setContactTestBitmask(0xFFFFFFFF);
+		bullet->setPhysicsBody(Body);
+		bullet->setTag(AIPLAYER_BULLET_TAG + num); //按照编号配备子弹
 
 		auto offset = monster->getPosition() - this->getPosition();
 		auto destination = offset * distanceForAttack / distanceFromMonster; //射程为distanceFromAttack
@@ -93,15 +101,15 @@ void AIPlayer::Attack(Monster* monster)
 
 		float random = CCRANDOM_0_1();
 		if (random < 0.5) {
-			auto moveRight = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(speed * 10, 0));
-			auto moveLeft = cocos2d::MoveBy::create(1.0, cocos2d::Vec2(-speed * 20, 0));
-			auto moveBack = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(speed * 10, 0));
+			auto moveRight = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(speed * 30, 0));
+			auto moveLeft = cocos2d::MoveBy::create(1.0, cocos2d::Vec2(-speed * 60, 0));
+			auto moveBack = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(speed * 30, 0));
 			this->runAction(cocos2d::Sequence::create(moveRight, moveLeft, moveBack, nullptr));
 		}
 		else {
-			auto moveUp = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(0, speed * 10));
-			auto moveDown = cocos2d::MoveBy::create(1.0, cocos2d::Vec2(0, -speed * 20));
-			auto moveBack = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(0, speed * 10));
+			auto moveUp = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(0, speed * 30));
+			auto moveDown = cocos2d::MoveBy::create(1.0, cocos2d::Vec2(0, -speed * 60));
+			auto moveBack = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(0, speed * 30));
 			this->runAction(cocos2d::Sequence::create(moveUp, moveDown, moveBack, nullptr));
 		}
 
@@ -112,11 +120,14 @@ void AIPlayer::Attack(Monster* monster)
 	}
 }
 
+void AIPlayer::GetScore()
+{
+	score++;
+}
+
 void AIPlayer::isHit()
 {
 	if (!isDead()) {
-		//碰撞检测
-
 		hp--;
 	}
 }
@@ -132,15 +143,17 @@ bool AIPlayer::isDead()
 void AIPlayer::update(float dt)
 {
 	if (isDead()) {
-		this->removeFromParent();//这应该是直接销毁了？不知道要不要保留数据
-	}
-	Monster* closestMonster = GetDistance();
-	if (isGoingToAttack()) {
-		Attack(closestMonster);
+		this->setPosition(100000, 100000); //移到很远的地方不参与之后的纷争
 	}
 	else {
-		Move(closestMonster);
+		Monster* closestMonster = GetDistance();
+		if (closestMonster != NULL) {
+			if (isGoingToAttack()) {
+				Attack(closestMonster);
+			}
+			else {
+				Move(closestMonster);
+			}
+		}
 	}
 }
-
-#endif
