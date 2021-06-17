@@ -270,9 +270,34 @@ void MySecondScene::EnterForthScene(Ref* pSender)
 
 void MySecondScene::update(float delta)
 {
-	for (int i = 0; i < MONSTER_AMOUNT; i++) {
-		vecMonster[i]->Reset();
-		this->addChild(vecMonster[i]);
+	if (m_player->isDead() && !hasDead) {
+		hasDead = true;
+		Sprite* back = Sprite::create("black.png");
+		back->setScale(5,5);
+		addChild(back, 10);
+		back->setPosition(Vec2(240, 160)); ////
+
+		auto choice = MenuItemFont::create("OK", [=](Ref* render) {
+			Director::getInstance()->popScene();
+			});
+		auto menu = Menu::create();
+		menu->addChild(choice);
+		menu->setPosition(240, 40);
+		addChild(menu, 20);
+
+		auto text = Label::createWithTTF("Game over", "fonts/Marker Felt.ttf", 70);
+		text->setPosition(Vec2(240, 280)); /// 
+		addChild(text, 30);
+
+		for (int i = 0; i < PLAYER_AMOUNT - 1; ++i) {
+			auto playerLabel = Label::createWithTTF(StringUtils::format("player%d",i) + StringUtils::format("     %d", vecAIPlayer[i]->queryscore()), "fonts/Marker Felt.ttf", 20);
+			playerLabel->setPosition(240, 60 + 20 * i);
+			addChild(playerLabel, 30);
+		}
+		auto playerLabel = Label::createWithTTF("me" + StringUtils::format("     %d", m_player->queryscore()), "fonts/Marker Felt.ttf", 20);
+		playerLabel->setPosition(240, 40 + 20 * 10);
+		addChild(playerLabel, 30);
+
 	}
 
 	Node::update(delta);
@@ -280,7 +305,6 @@ void MySecondScene::update(float delta)
 	update_S(delta);
 	update_A(delta);
 	update_D(delta);
-
 }
 
 

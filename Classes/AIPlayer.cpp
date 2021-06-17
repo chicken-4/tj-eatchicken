@@ -157,3 +157,8 @@ void AIPlayer::update(float dt)
 		}
 	}
 }
+
+int AIPlayer::queryscore()
+{
+	return score;
+}

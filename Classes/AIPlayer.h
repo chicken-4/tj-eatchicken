@@ -32,6 +32,8 @@ public:
     bool isDead();
 
     virtual void update(float dt);
+
+    int queryscore();
 private:
     std::vector<Monster*> vecMonsters;
     cocos2d::Scene* myScene;

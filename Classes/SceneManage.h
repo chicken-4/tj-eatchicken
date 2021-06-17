@@ -69,6 +69,8 @@ private:
 	Label* Score;
 	Label* time_label;
 	Sprite* Small_map;
+
+	bool hasDead = false;
 private:
 	std::vector<Player*> vecPlayer;
 	std::vector<AIPlayer*> vecAIPlayer;

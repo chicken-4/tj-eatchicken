@@ -131,8 +131,8 @@ void Monster::isHit()
 bool Monster::isDead()
 {
 	if (0 >= hp) {
-		removeFromParent();
 		hp = MONSTER_HP;
+		Reset();
 		return true;
 	}
 	return false;

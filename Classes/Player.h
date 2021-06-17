@@ -38,6 +38,8 @@ public:
     void ChangeCartridge(); //换弹
     bool isDead();
 
+    int queryscore();
+
 private:
     EventListenerKeyboard* keyListener = EventListenerKeyboard::create();//动作
 
@@ -49,6 +51,8 @@ private:
     int gunType = 0; //记录枪的类型
     int cartridgeAmount = 0; //拥有的弹夹量
     int bulletAmount = 0; //现使用弹夹内剩余子弹数
+
+    bool hasDead = false;
 };
 
 #endif

@@ -76,6 +76,7 @@ void Player::isHit()
     if (!isDead()) {
         hp--;
     }
+    CCLOG("%d", hp);
 }
 
 void Player::alter_blood(Sprite* Blood)
@@ -85,7 +86,14 @@ void Player::alter_blood(Sprite* Blood)
 
 bool Player::isDead()
 {
+    if (hp <= 0) 
+        return true;
     return false;
+}
+
+int Player::queryscore()
+{
+    return score;
 }
 
 void Player::AddHP()

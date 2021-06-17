@@ -80,7 +80,6 @@ bool MySecondScene::init()
 	for (int i = 0; i < MONSTER_AMOUNT; i++) {
 		vecMonster.push_back(Monster::create());
 		vecMonster[i]->bindSprite(Sprite::create("5.png"));
-		vecMonster[i]->retain();
 
 		auto Body = PhysicsBody::createBox(vecMonster[i]->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
 		Body->setDynamic(false);
@@ -234,6 +233,7 @@ bool MySecondScene::init()
 	this->schedule(CC_SCHEDULE_SELECTOR(MySecondScene::update_A), 1 / 60);
 	this->schedule(CC_SCHEDULE_SELECTOR(MySecondScene::update_D), 1 / 60);//≈‹∂ØµÿÕº
 
+	scheduleUpdate();
 
 	return true;
 }
