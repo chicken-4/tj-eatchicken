@@ -74,9 +74,22 @@ void Monster::Wait()
 void Monster::Move(cocos2d::Sprite* player)
 {
 	auto offset = player->getPosition() - this->getPosition(); //从怪物位置指向玩家
+	if (stop) {
+		if (i == 1) {
+			offset = Vec2(2*offset.x,0);
+		}
+		else if (i == 0) {
+			offset = Vec2(0, 2*offset.y);
+		}
+		
+	}
 	auto destination = offset * speed / distanceFromPlayer;
 	auto Action = cocos2d::MoveBy::create(0.5, destination);
 	this->runAction(Action); //怪物移动
+}
+
+void Monster::Avoid_brick(int direction) {
+	i = direction;
 }
 
 void Monster::Attack(cocos2d::Sprite* player)
@@ -112,11 +125,19 @@ void Monster::Attack(cocos2d::Sprite* player)
 	}
 }
 
+void Monster::Stop(const bool flag)
+{
+	stop = flag;
+	if (flag) {
+		stopAllActions();
+
+	}
+}
 
 void Monster::Reset()
 {
 	//随机位置
-	background = Sprite::create("big2xx.png");
+	background = Sprite::create("startpage.png");
 	background->setPosition(background->getContentSize().width / 2 + 25, background->getContentSize().height / 2);
 	setPosition(Vec2(CCRANDOM_0_1() * (background->getContentSize().width - 200) + 100, CCRANDOM_0_1() * (background->getContentSize().height - 200) + 100));
 }
@@ -140,9 +161,6 @@ bool Monster::isDead()
 
 void Monster::update(float dt)
 {
-	if (isDead()) {
-		Reset();
-	}
 	cocos2d::Sprite* closestPlayer = GetDistance();
 	if (isGoingToMove()) {
 		Move(closestPlayer);

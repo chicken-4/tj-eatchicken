@@ -4,12 +4,14 @@
 #include"AnimationUtil.h"
 #include"SceneManage.h"
 
+
 using namespace cocos2d;
 
 const int Front = 1;
 const int Behind = 2;
 const int Right = 3;
 const int Left = 4;
+int m_PlayerImage = 0;
 
 
 USING_NS_CC;
@@ -71,7 +73,13 @@ void TollgateScene::update(float delta)
 /*»Øµ÷º¯Êý*/
 void TollgateScene::MySecondScene(Ref* pSender)
 {
-	Director::getInstance()->replaceScene(MySecondScene::createScene());
+	Director::getInstance()->replaceScene(MySecondScene::createScene(m_PlayerImage));
+}
+void TollgateScene::ChangeImageToBird(Ref* pSender)
+{
+	m_PlayerImage++;
+	bird->initWithFile((cocos2d::StringUtils::format("%1dplayer.png", m_PlayerImage % 9)));
+	
 }
 void TollgateScene::MyThirdScene(Ref* pSender)
 {

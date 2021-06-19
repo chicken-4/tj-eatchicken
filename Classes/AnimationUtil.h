@@ -12,18 +12,16 @@ class AnimationUtil
 {
 public:
 	/*根据文件名字前缀创建动画对象*/
-	static Animate* createWithSingleFrameName_1();
-	static Animate* createWithSingleFrameName_2();
-	static Animate* createWithSingleFrameName_3();
-	static Animate* createWithSingleFrameName_4();
+	static Animate* createWithSingleFrameName_bird1(int m_Image);
+	static Animate* createWithSingleFrameName_bird2(int m_Image);
+	static Animate* createWithSingleFrameName_bird3(int m_Image);
+	static Animate* createWithSingleFrameName_bird4(int m_Image);
+	static Animate* createWithSingleFrameName_monsterDuck();
+	static Animate* createWithSingleFrameName_monster1();
 
 	/*根据文件名字前缀创建动画对象,指定动画图片数量*/
 	//static Animation* createWithSingleFrameNameAndNum(const char* name, int num,float delay, int iLoops);
 private:
-	Animate*animate1;
-	Animate*animate2;
-	Animate*animate3;
-	Animate*animate4;
 };
 
 #endif

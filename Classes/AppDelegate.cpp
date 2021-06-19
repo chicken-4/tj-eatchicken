@@ -82,7 +82,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }
 
     // turn on display FPS
-    director->setDisplayStats(false);//设置是否显示游戏的帧数等调试信息
+    director->setDisplayStats(true);//设置是否显示游戏的帧数等调试信息
 
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0f / 60);//设置游戏的帧数，这里是每秒六十帧

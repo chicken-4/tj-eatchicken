@@ -25,14 +25,15 @@ public:
 
     void Wait();
     void Move(Monster* monster);
+    void Avoid_brick(int direction);
     void Attack(Monster* monster);
+    void Stop(const bool flag);
 
     void GetScore();
     void isHit();
     bool isDead();
 
     virtual void update(float dt);
-
     int queryscore();
 private:
     std::vector<Monster*> vecMonsters;
@@ -42,9 +43,11 @@ private:
     const float speed = 1; //移动速度（每0.5秒）
     bool shoot = true;
     bool moveWhenAttack = true;
+    bool stop = false;
     int hp = 10; //血量
     int num = 0; //标记是第几个被创建的ai玩家
     int score = 0; //得分
+    int i = 2;
 };
 
 #endif
