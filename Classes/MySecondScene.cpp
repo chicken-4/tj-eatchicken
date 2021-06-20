@@ -3,6 +3,7 @@
 #include"AnimationUtil.h"
 #include"SceneManage.h"
 #include"TimeCounter.h"
+#include"Weapon.h"
 
 //场景的切换（主地图、最后排名、房间
 //初始主界面在tollgatescene
@@ -177,6 +178,7 @@ void MySecondScene::initBG()
 		gun1->addChild(sprite);
 	}
 	this->addChild(gun1);
+	//initWeapon();
 
 
 	gun2 = SpriteBatchNode::create("gun2.png");
@@ -412,7 +414,7 @@ void MySecondScene::update(float delta)
 			m_player->alter_blood(m_blood);
 		}
 	}
-	if (m_player->isDead() && !hasDead) {
+	if ((m_player->isDead() && !hasDead)|| time<0||time==0) {
 		hasDead = true;
 		Sprite* back = Sprite::create("startpage.png");
 
@@ -604,7 +606,8 @@ void MySecondScene::keyPressedDuration_A()//当按键返回为true时执行的函数
 		m_player->runAction(moveTo);
 	}
 	else {
-		keyPressedDuration_Scene(offsetX, offsetY);
+		
+		keyPressedDuration_Scene(offsetX-2, offsetY);
 	}
 }
 void MySecondScene::keyPressedDuration_D()
@@ -616,7 +619,7 @@ void MySecondScene::keyPressedDuration_D()
 		m_player->runAction(moveTo);
 	}
 	else {
-		keyPressedDuration_Scene(offsetX, offsetY);
+		keyPressedDuration_Scene(offsetX+2, offsetY);
 	}
 }
 void MySecondScene::keyPressedDuration_W()
@@ -628,7 +631,7 @@ void MySecondScene::keyPressedDuration_W()
 		m_player->runAction(moveTo);
 	}
 	else {
-		keyPressedDuration_Scene(offsetX, offsetY);
+		keyPressedDuration_Scene(offsetX, offsetY+2);
 	}
 }
 void MySecondScene::keyPressedDuration_S()
@@ -640,7 +643,7 @@ void MySecondScene::keyPressedDuration_S()
 		m_player->runAction(moveTo);
 	}
 	else {
-		keyPressedDuration_Scene(offsetX, offsetY);
+		keyPressedDuration_Scene(offsetX, offsetY-2);
 	}
 }
 

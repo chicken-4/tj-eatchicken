@@ -4,6 +4,7 @@
 #include"AnimationUtil.h"
 #include"SceneManage.h"
 #include"TimeCounter.h"
+#include"Weapon.h"
 
 
 
