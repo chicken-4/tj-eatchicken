@@ -75,11 +75,21 @@ void Monster::Move(cocos2d::Sprite* player)
 {
 	auto offset = player->getPosition() - this->getPosition(); //从怪物位置指向玩家
 	if (stop) {
-		offset = -offset;
+		if (i == 1) {
+			offset = Vec2(2*offset.x,0);
+		}
+		else if (i == 0) {
+			offset = Vec2(0, 2*offset.y);
+		}
+		
 	}
 	auto destination = offset * speed / distanceFromPlayer;
 	auto Action = cocos2d::MoveBy::create(0.5, destination);
 	this->runAction(Action); //怪物移动
+}
+
+void Monster::Avoid_brick(int direction) {
+	i = direction;
 }
 
 void Monster::Attack(cocos2d::Sprite* player)

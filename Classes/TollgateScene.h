@@ -4,6 +4,8 @@
 
 #include"cocos2d.h"
 using namespace cocos2d;
+
+extern int m_PlayerImage;
 class Player;
 class TollgateScene :public Scene
 {
@@ -13,10 +15,12 @@ public:
 	void MyThirdScene(Ref* pSender);
 	void MyFifthScene(Ref* pSender);//enter room
 	void EXIT(Ref* pSender);
+    void ChangeImageToBird(Ref* pSender);
 	static Scene* createScene();
 	virtual bool init();
 	CREATE_FUNC(TollgateScene);
 	virtual void update(float delta);
+	void addmissile(float dt);
 	cocos2d::PhysicsBody* physicsBody1;
 private:
 	void initBG();//初始化关卡场景
@@ -32,6 +36,8 @@ private://此private中全部为背景图中布景
 	Sprite* border2;
 	Sprite* border3;
 	Sprite* border4;
+	Sprite* bird;
+	Sprite* missile;
 	/*Sprite* box;
 	Sprite* tree;
 	Sprite* ball;
@@ -44,10 +50,13 @@ private://此private中全部为背景图中布景
 	Label* ENTERROOM;
 	Label* Exit;
 	int AudioID1; int AudioID2;
+	
 
 	Sprite* black1;
 	std::map<cocos2d::EventKeyboard::KeyCode, bool>keys;
 private:
 	Player* m_player;//主角
-};
+}; 
+
+
 #endif

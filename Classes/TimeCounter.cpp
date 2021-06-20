@@ -28,7 +28,8 @@ void Clock::PrintTime()
 		timeLabel->setString((cocos2d::StringUtils::format("%2d:%2d", time / 60, time % 60)));
 		timeLabel->setColor(Color3B(0, 0, 0));
 	}
-	else {
+	
+	else if(time<=0){
 		//½áÊø
 		Director::getInstance()->replaceScene(MyForthScene::createScene());
 	}

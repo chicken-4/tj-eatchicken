@@ -15,35 +15,7 @@ bool Player::init()
 
 //人物动画，包括上下左右四个方向的移动
 //重写了第一版，通过图片打包使程序更加简洁
-void Player::run(int index)
-{
-    SpriteFrameCache* frameCache = SpriteFrameCache::getInstance();
-    if (index == 1)
-        frameCache->addSpriteFramesWithFile("front.plist", "front.png");
-    else if (index == 2)
-        frameCache->addSpriteFramesWithFile("behind.plist", "behind.png");
-    else if (index == 3)
-        frameCache->addSpriteFramesWithFile("right.plist", "right.png");
-    else if (index == 4)
-        frameCache->addSpriteFramesWithFile("left.plist", "left.png");
-    SpriteFrame* frame = NULL;
-    Vector<SpriteFrame*>frameList;
 
-    for (int i = 1; i < 5; i++)
-    {
-        frame = frameCache->getSpriteFrameByName(StringUtils::format("%d%d.png", index, i));
-        frameList.pushBack(frame);
-    }
-
-    Animation* animation = Animation::createWithSpriteFrames(frameList);
-
-    animation->setLoops(1);
-    animation->setRestoreOriginalFrame(true);
-    animation->setDelayPerUnit(0.2f);
-    Animate* animate = Animate::create(animation);
-    //m_sprite->stopAction(animate);
-    this->getSprite()->runAction(animate);
-}
 
 /*void Player::SetViewPointByPlayer()
 {
@@ -74,11 +46,39 @@ void Player::printScore(Label*Score)
 
 void Player::print_rest_bullet1(Label* BULLET1)
 {
-    BULLET1->setString((cocos2d::StringUtils::format("%3d", bullet1)));
+    BULLET1->setString((cocos2d::StringUtils::format("%3d/%2d", bullet1,bullet1amount)));
 }
 void Player::print_rest_bullet2(Label* BULLET2)
 {
-    BULLET2->setString((cocos2d::StringUtils::format("%3d", bullet2)));
+    BULLET2->setString((cocos2d::StringUtils::format("%3d/%2d", bullet2, bullet2amount)));
+}
+
+void Player::print_speed(Label* SPEED) {
+    int realspeed = speed * 10 - 10;
+    SPEED->setString((cocos2d::StringUtils::format("1.%1d",realspeed)));
+}
+
+void Player::addBullet1Amount() {
+    bullet1amount = bullet1amount + 5;
+}
+
+void Player::addBullet2Amount() {
+    bullet2amount = bullet2amount + 5;
+}
+
+void Player::changeSpeed()
+{
+    speed=speed+0.1;
+}
+
+bool Player::speedIsfull()
+{
+    if (speed >= 1.8) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 void Player::lose_bullet1()
@@ -93,12 +93,22 @@ void Player::lose_bullet2()
 
 void Player::gain_bullet1()
 {
-    bullet1 = bullet1 + 10;
+    if (!bullet1_is_full()) {
+       bullet1 = bullet1 + 10;
+    }
+    else {
+        bullet1 = bullet1amount;
+    }
 }
 
 void Player::gain_bullet2()
 {
-    bullet2 = bullet2 + 10;
+    if (!bullet2_is_full()){ 
+        bullet2 = bullet2 + 10;
+    }
+    else {
+        bullet2 = bullet2amount;
+    }
 }
 
 bool Player::bullet1_is_empty()
@@ -117,6 +127,22 @@ bool Player::bullet2_is_empty()
     return false;
 }
 
+bool Player::bullet1_is_full()
+{
+    if (bullet1 >= bullet1amount-10) {
+        return true;
+    }
+    return false;
+}
+
+bool Player::bullet2_is_full()
+{
+    if (bullet2 >= bullet2amount - 10) {
+        return true;
+    }
+    return false;
+}
+
 
 void Player::isHit()
 {
@@ -126,9 +152,28 @@ void Player::isHit()
     CCLOG("%d", hp);
 }
 
+void Player::isOutOfCircle()
+{
+    if (!isDead()) {
+        hp=hp-0.01;
+    }
+    CCLOG("%d", hp);
+}
+
+
 void Player::alter_blood(Sprite* Blood)
 {
-    Blood->setContentSize(Size(9 * hp, 80));
+    Blood->setContentSize(Size(3 * hp, 80));
+    Blood->setPosition(Vec2(119 - hp / 3, 300));
+    if (hp >= 20) {
+        Blood->setColor(Color3B(0, 220, 0));
+    }
+    else if (hp >= 10 && hp < 20) {
+        Blood->setColor(Color3B(255, 255, 0));
+    }
+    else if (hp < 10) {
+        Blood->setColor(Color3B(179, 40, 33));
+    }
 }
 
 bool Player::isDead()
@@ -146,7 +191,7 @@ int Player::queryscore()
 void Player::AddHP()
 {
     if (hp < PLAYER_HP / 2) {
-        hp += PLAYER_HP / 2; //一个医疗包回一半血
+        hp += PLAYER_HP / 3; //一个医疗包回1/3血
     }
     else {
         hp = PLAYER_HP;

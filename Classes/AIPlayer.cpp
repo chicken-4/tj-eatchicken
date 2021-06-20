@@ -1,4 +1,5 @@
 #include "AIPlayer.h"
+#include"AnimationUtil.h"
 
 bool AIPlayer::init()
 {
@@ -56,12 +57,22 @@ void AIPlayer::Wait()
 
 void AIPlayer::Move(Monster* monster)
 {
-	if (!stop) {
-		auto offset = monster->getPosition() - this->getPosition();
-		auto destination = offset * speed / distanceFromMonster;
-		auto Action = cocos2d::MoveBy::create(0.5, destination);
-		this->runAction(Action);
+	auto offset = monster->getPosition() - this->getPosition();
+	if (stop) {
+		if (i == 1) {
+			offset = Vec2(2 * offset.x, 0);
+		}
+		else if (i == 0) {
+			offset = Vec2(0, 2 * offset.y);
+		}
 	}
+	auto destination = offset * speed / distanceFromMonster;
+	auto Action = cocos2d::MoveBy::create(0.5, destination);
+	this->runAction(Action);
+}
+
+void AIPlayer::Avoid_brick(int direction) {
+	i = direction;
 }
 
 void AIPlayer::Attack(Monster* monster)
@@ -82,6 +93,10 @@ void AIPlayer::Attack(Monster* monster)
 		bullet->setTag(AIPLAYER_BULLET_TAG + num); //按照编号配备子弹
 
 		auto offset = monster->getPosition() - this->getPosition();
+		float radians = atan2(offset.y, -offset.x);
+		float degree = CC_RADIANS_TO_DEGREES(radians);
+		bullet->setRotation(degree);
+
 		auto destination = offset * distanceForAttack / distanceFromMonster; //射程为distanceFromAttack
 		auto Move = cocos2d::MoveBy::create(1.0, destination);
 		auto Remove = cocos2d::RemoveSelf::create();

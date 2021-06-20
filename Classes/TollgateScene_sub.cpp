@@ -8,6 +8,7 @@
 //#include"Entity.h"
 #include"TollgateScene.h"
 #include"SceneManage.h"
+#include"AnimationUtil.h"
 
 using namespace cocos2d;
 
@@ -24,9 +25,51 @@ void TollgateScene::initBG()
 
 }
 
+void  TollgateScene::addmissile(float dt)
+{
+
+	missile = Sprite::create("missile.png");
+	auto monsterContentSize = missile->getContentSize();
+	auto selfContentSize = this->getContentSize();
+	int minY = monsterContentSize.height / 2;
+	int maxY = selfContentSize.height - minY;
+	int rangeY = maxY - minY;
+	int randomY = (rand() % rangeY) + minY;
+	missile->setPosition(Vec2(0, randomY));
+	this->addChild(missile);
+	// Let monster run
+	int minDuration = 2.0;
+	int maxDuration = 4.0;
+	int rangeDuration = maxDuration - minDuration;
+	int randomDuration = (rand() % rangeDuration) + minDuration;
+
+	// 定义移动的object
+	// 在randomDuration这个时间内(2-4秒内)，让怪物从屏幕右边移动到左边。(怪物有快有慢)
+	auto actionMove1 = MoveTo::create(randomDuration, Vec2(480, randomY));
+	// 定义消除的Object。怪物移出屏幕后被消除，释放资源。auto actionMove2 = MoveTo::create(randomDuration, Vec2(monsterContentSize.width / 2, randomY));
+	auto actionRemove1 = RemoveSelf::create();
+	missile->runAction (Sequence::create(actionMove1, actionRemove1, nullptr));
+}
+
 
 void TollgateScene::initBeginning()
 {
+	bird = Sprite:: create("0player.png");
+	bird->setPosition(125, 110);
+	bird->setScale(4);
+	this->addChild(bird);
+
+	auto bird_change = Menu::create();
+	auto change = Label::create();
+	change->setString("Click To Change");
+	auto birdChange = MenuItemLabel::create(change, CC_CALLBACK_1(TollgateScene::ChangeImageToBird, this));
+	//创建好了菜单条目，就需要加入菜单中，所以下面就是创建菜单
+	birdChange->setPosition(Vec2(-110, -110));
+	birdChange->setScale(1.0);
+	bird_change->addChild(birdChange);
+	//把菜单添加到MyFirstScene层中
+	this->addChild(bird_change);
+
 	auto label1 = Label::create();// = Label::createWithSystemFont("START GAME", "fonts/arial.ttf", 30);
 	label1->setString("START GAME");
 	label1->setScale(1.0);
@@ -69,18 +112,34 @@ void TollgateScene::initBeginning()
 	this->addChild(menu3);
 
 	POBG = Label::create();
-	POBG->setString("POBG");
+	POBG->setString("P   O   B   G");
 	POBG->setScale(5);
 	POBG->setColor(Color3B(3, 54, 73));
 	POBG->enableShadow(Color4B(0, 0, 0, 255), Size(-0.5, -0.5), 1);
-	POBG->setPosition(Vec2(235, 250));
+	POBG->setPosition(Vec2(235, 260));
 	this->addChild(POBG);
 
-	m_player = Player::create();
-	m_player->bindSprite(Sprite::create("11.png"));
-	m_player->setScale(4.0);
-	m_player->setPosition(Vec2(110, 70));
-	this->addChild(m_player);
+	auto turtle = Sprite::create("monster11.png");
+	turtle->setPosition(235, 257);
+	turtle->setScale(0.45);
+	turtle->runAction(AnimationUtil::createWithSingleFrameName_monster1());
+	this->addChild(turtle);
+
+	auto duck = Sprite::create("monster3.png");
+	duck->setScale(0.17);
+	duck->setPosition(323, 260);
+	duck->runAction(AnimationUtil::createWithSingleFrameName_monsterDuck());
+	this->addChild(duck);
+
+	auto ghost= Sprite::create("monster2.png");
+	ghost->setScale(0.3);
+	ghost->setPosition(140, 260);
+	ghost->runAction(AnimationUtil::createWithSingleFrameName_monsterGhost());
+	this->addChild(ghost);
+	
+	srand((unsigned int)time(nullptr));
+	// 每隔1.5秒生成一个怪物
+	this->schedule(CC_SCHEDULE_SELECTOR(TollgateScene::addmissile), 5);
 
 	auto label4 = Label::create();// = Label::createWithSystemFont("START GAME", "fonts/arial.ttf", 30);
 	label4->setString("ENTER ROOM");

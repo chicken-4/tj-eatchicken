@@ -19,12 +19,13 @@ class Clock :public cocos2d::Node {
 public:
 	virtual bool init();
 	CREATE_FUNC(Clock);
+	int time = 600; //一局游戏的时长（秒）
 
 	void BindLabel(cocos2d::Label* label);
 	void PrintTime();
 	//	void TimeUpdate(float dt);
 private:
-	int time = 600; //一局游戏的时长（秒）
+	
 	cocos2d::Label* timeLabel;
 };
 

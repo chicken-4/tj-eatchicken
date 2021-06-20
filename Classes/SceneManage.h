@@ -3,6 +3,8 @@
 #include"Player.h"
 #include "AIPlayer.h"
 #include "Monster.h"
+#include "Monster2.h"
+#include "Monster3.h"
 
 #define BORDER_TAG   -10
 #define BRICK_TAG   -400
@@ -12,6 +14,11 @@
 #define PILL_TAG   120
 #define BULLET1_TAG   140
 #define BULLET2_TAG   160
+#define RIVER_TAG   250
+#define SPEED_TAG   260
+#define BULLET1LIMIT_TAG   280
+#define BULLET2LIMIT_TAG   285
+
 
 #define BRICK_AMOUNT  399
 #define GRASS_AMOUNT 200
@@ -20,14 +27,19 @@
 #define PILL_AMOUNT 20
 #define BULLET1_AMOUNT 20
 #define BULLET2_AMOUNT 20
+#define SPEED_AMOUNT 20
+#define BULLET1LIMIT_AMOUNT 5
+#define BULLET2LIMIT_AMOUNT 5
+
 
 using namespace cocos2d;
+
 class Player;
 class MySecondScene :public Scene//主地图
 {
 public:
 	//void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* events);
-	static Scene* createScene();
+	static Scene* createScene(int i);
 	void update_W(float delta);
 	void update_S(float delta);
 	void update_A(float delta);
@@ -36,9 +48,12 @@ public:
 	CREATE_FUNC(MySecondScene);
 	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event);//声明回调函数
 	virtual bool init();
+
+	void addMonstersAndAI(const int humanAmount);
 	void initIF();
 	void initBG();
 	void initLABEL();
+	void addCircle(float dt);
 	void EnterForthScene(Ref* pSender);//最终结算
 	void EXIT(Ref* pSender);//退出
 
@@ -48,6 +63,7 @@ public:
 	cocos2d::SpriteBatchNode* gun2;
 	cocos2d::SpriteBatchNode* bullet1;
 	cocos2d::SpriteBatchNode* bullet2;
+	cocos2d::SpriteBatchNode* addSomething;
 
 	cocos2d::SpriteBatchNode* pill;
 	void keyPressedDuration_W();
@@ -66,6 +82,9 @@ private:
 	Sprite* border2;
 	Sprite* border3;
 	Sprite* border4;
+	Sprite* river1;
+	Sprite* river2;
+	Sprite* lake;
 	Sprite* box;
 	Sprite* tree;
 	Sprite* ball;
@@ -82,17 +101,32 @@ private:
 	Label* BULLET1;
 	Label* BULLET2;
 	Label* time_label;
+	Label* SPEED;
+	Label* speed_label;
 	Sprite* Small_map;
+	Sprite* bird;
+	Sprite* circle1;
+	Sprite* circle2;
 	bool hasDead = false;
-	int guntype=0;
+	int guntype = 0;
+	int it = 0;
+	int circle = 1;
 private:
 	std::vector<Player*> vecPlayer;
 	std::vector<AIPlayer*> vecAIPlayer;
 	std::vector<Monster*> vecMonster;
+	MonsterDuck* duck;
+	std::vector<Missile*> vecMissile;
+	std::vector<Ghost*> vecGhost;
+
 	std::map<int, Player*> mapPlayerTag;
 	std::map<int, AIPlayer*> mapAIPlayerTag;
 	std::map<int, Monster*> mapMonsterTag;
+	std::map<int, Missile*> mapMissileTag;
+	std::map<int, Ghost*> mapGhostTag;
+
 	Player* m_player;
+
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> keys;
 };
 
@@ -174,3 +208,4 @@ public:
 	Label* POBG;
 };
 #endif*/
+

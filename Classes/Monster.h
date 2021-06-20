@@ -32,6 +32,7 @@ public:
 
     void Wait();
     void Move(cocos2d::Sprite* player); //靠近玩家
+    void Avoid_brick(int direction);
     void Attack(cocos2d::Sprite* player); //攻击玩家
     void Stop(const bool flag);
 
@@ -42,6 +43,7 @@ public:
     virtual void update(float dt);
 private:
     std::vector<cocos2d::Sprite*> vecPlayers;
+    int i=2;
     float distanceFromPlayer;
     const float distanceForMove = 500;
     const float distanceForAttack = 100; //与子弹射程相同
