@@ -62,7 +62,7 @@ void MySecondScene::initBG()
 	border4->setTag(BORDER_TAG);
 	this->addChild(border4);
 
-
+	srand((unsigned int)time(NULL));
 	//石头
 	brick = SpriteBatchNode::create("bocket.png");
 
@@ -147,18 +147,59 @@ void MySecondScene::initBG()
 	}
 	this->addChild(pill);
 
+	bullet1 = SpriteBatchNode::create("bullet11.png");
+	for (int i = 0; i < BULLET1_AMOUNT; i++)
+	{
+		Sprite* sprite = Sprite::create("bullet11.png");
+		sprite->setPosition(Vec2(CCRANDOM_0_1() * (start_Page->getContentSize().width - 200) + 100, CCRANDOM_0_1() * (start_Page->getContentSize().height - 200) + 100));
+		body = PhysicsBody::createBox(sprite->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
+		body->setDynamic(false);
+		body->setContactTestBitmask(0xFFFFFFFF);
+		sprite->setPhysicsBody(body);
+		sprite->setTag(BULLET1_TAG + i);
+		bullet1->addChild(sprite);
+	}
+	this->addChild(bullet1);
 
-	Sprite* bagblock1 = Sprite::create("bagblock.png");
+	bullet2 = SpriteBatchNode::create("bullet22.png");
+	for (int i = 0; i < BULLET1_AMOUNT; i++)
+	{
+		Sprite* sprite = Sprite::create("bullet22.png");
+		sprite->setPosition(Vec2(CCRANDOM_0_1() * (start_Page->getContentSize().width - 200) + 100, CCRANDOM_0_1() * (start_Page->getContentSize().height - 200) + 100));
+		body = PhysicsBody::createBox(sprite->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
+		body->setDynamic(false);
+		body->setContactTestBitmask(0xFFFFFFFF);
+		sprite->setPhysicsBody(body);
+		sprite->setTag(BULLET2_TAG + i);
+		bullet2->addChild(sprite);
+	}
+	this->addChild(bullet2);
+
+    bagblock1 = Sprite::create("bagblock.png");
 	bagblock1->setPosition(400, 20);
 	this->addChild(bagblock1);
 
-	Sprite* bagblock2 = Sprite::create("bagblock.png");
+	bagblock2 = Sprite::create("bagblock.png");
 	bagblock2->setPosition(370, 20);
 	this->addChild(bagblock2);
 
-	Sprite* bagblock3 = Sprite::create("bagblock.png");
+	bagblock3 = Sprite::create("bagblock.png");
 	bagblock3->setPosition(430, 20);
 	this->addChild(bagblock3);
+
+	BULLET1 = Label::create();
+	BULLET1->setPosition(Vec2(405, 40));
+	BULLET1->setString("0");
+	BULLET1->setScale(0.8);
+	BULLET1 ->setColor(Color3B(0, 0, 0));
+	this->addChild(BULLET1);
+
+	BULLET2 = Label::create();
+	BULLET2->setPosition(Vec2(435, 40));
+	BULLET2->setString("0");
+	BULLET2->setScale(0.8);
+	BULLET2->setColor(Color3B(0, 0, 0));
+	this->addChild(BULLET2);
 }
 void MySecondScene::initIF()
 {
@@ -273,7 +314,7 @@ void MySecondScene::update(float delta)
 	if (m_player->isDead() && !hasDead) {
 		hasDead = true;
 		Sprite* back = Sprite::create("black.png");
-		back->setScale(5,5);
+		back->setScale(5, 5);
 		addChild(back, 10);
 		back->setPosition(Vec2(240, 160)); ////
 
@@ -290,7 +331,7 @@ void MySecondScene::update(float delta)
 		addChild(text, 30);
 
 		for (int i = 0; i < PLAYER_AMOUNT - 1; ++i) {
-			auto playerLabel = Label::createWithTTF(StringUtils::format("player%d",i) + StringUtils::format("     %d", vecAIPlayer[i]->queryscore()), "fonts/Marker Felt.ttf", 20);
+			auto playerLabel = Label::createWithTTF(StringUtils::format("player%d", i) + StringUtils::format("     %d", vecAIPlayer[i]->queryscore()), "fonts/Marker Felt.ttf", 20);
 			playerLabel->setPosition(240, 60 + 20 * i);
 			addChild(playerLabel, 30);
 		}
@@ -299,12 +340,8 @@ void MySecondScene::update(float delta)
 		addChild(playerLabel, 30);
 
 	}
-
 	Node::update(delta);
-	update_W(delta);
-	update_S(delta);
-	update_A(delta);
-	update_D(delta);
+
 }
 
 
@@ -341,6 +378,66 @@ void MySecondScene::update_D(float delta)
 	}
 }
 
+void MySecondScene::keyPressedDuration_Scene(float offsetX,float offsetY)
+{
+	auto moveTo1 = MoveTo::create(0, Vec2(start_Page->getPositionX() - offsetX, start_Page->getPositionY() - offsetY));
+	start_Page->runAction(moveTo1);
+
+	for (int i = 0; i < BRICK_AMOUNT; i++) {
+		auto moveTo2 = MoveTo::create(0, Vec2(brick->getChildByTag(BRICK_TAG + i)->getPositionX() - offsetX, brick->getChildByTag(BRICK_TAG + i)->getPositionY() - offsetY));
+		brick->getChildByTag(BRICK_TAG + i)->runAction(moveTo2);
+	}
+	for (int i = 0; i < GRASS_AMOUNT; i++) {
+		auto moveTo3 = MoveTo::create(0, Vec2(gress->getChildByTag(GRASS_TAG + i)->getPositionX() - offsetX, gress->getChildByTag(GRASS_TAG + i)->getPositionY() - offsetY));
+		gress->getChildByTag(GRASS_TAG + i)->runAction(moveTo3);
+	}
+	for (int i = 0; i < GUN1_AMOUNT; i++) {
+		if (gun1->getChildByTag(GUN1_TAG + i) != nullptr) {
+			auto moveTo4 = MoveTo::create(0, Vec2(gun1->getChildByTag(GUN1_TAG + i)->getPositionX() - offsetX, gun1->getChildByTag(GUN1_TAG + i)->getPositionY() - offsetY));
+			gun1->getChildByTag(GUN1_TAG + i)->runAction(moveTo4);
+		}
+
+	}
+	for (int i = 0; i < GUN2_AMOUNT; i++) {
+		if (gun2->getChildByTag(GUN2_TAG + i) != nullptr) {
+			auto moveTo5 = MoveTo::create(0, Vec2(gun2->getChildByTag(GUN2_TAG + i)->getPositionX() - offsetX, gun2->getChildByTag(GUN2_TAG + i)->getPositionY() - offsetY));
+			gun2->getChildByTag(GUN2_TAG + i)->runAction(moveTo5);
+		}
+
+	}
+	for (int i = 0; i < PILL_AMOUNT; i++) {
+		if (pill->getChildByTag(PILL_TAG + i) != nullptr) {
+			auto moveTo6 = MoveTo::create(0, Vec2(pill->getChildByTag(PILL_TAG + i)->getPositionX() - offsetX, pill->getChildByTag(PILL_TAG + i)->getPositionY() - offsetY));
+			pill->getChildByTag(PILL_TAG + i)->runAction(moveTo6);
+		}
+	}
+
+	for (int i = 0; i < BULLET1_AMOUNT; i++) {
+		if (bullet1->getChildByTag(BULLET1_TAG + i) != nullptr) {
+			auto moveTo7 = MoveTo::create(0, Vec2(bullet1->getChildByTag(BULLET1_TAG + i)->getPositionX() - offsetX, bullet1->getChildByTag(BULLET1_TAG + i)->getPositionY() - offsetY));
+			bullet1->getChildByTag(BULLET1_TAG + i)->runAction(moveTo7);
+		}
+
+	}
+
+	for (int i = 0; i < BULLET2_AMOUNT; i++) {
+		if (bullet2->getChildByTag(BULLET2_TAG + i) != nullptr) {
+			auto moveTo7 = MoveTo::create(0, Vec2(bullet2->getChildByTag(BULLET2_TAG + i)->getPositionX() - offsetX, bullet2->getChildByTag(BULLET2_TAG + i)->getPositionY() - offsetY));
+			bullet2->getChildByTag(BULLET2_TAG + i)->runAction(moveTo7);
+		}
+
+	}
+	for (int i = 0; i < MONSTER_AMOUNT; i++) {
+		auto moveTo9 = MoveTo::create(0, Vec2(vecMonster[i]->getPositionX() - offsetX, vecMonster[i]->getPositionY() - offsetY));
+		vecMonster[i]->runAction(moveTo9);
+	}
+
+	for (int i = 0; i < vecAIPlayer.size(); i++) {
+		auto moveBy = MoveBy::create(0, Vec2(-offsetX, -offsetY));
+		vecAIPlayer[i]->runAction(moveBy);
+	}
+}
+
 void MySecondScene::keyPressedDuration_A()//当按键返回为true时执行的函数
 //其中当人物在中心位置时移动人，而人物超出中心位置的时候移动景，之后联机需要用UI坐标转化，将背景坐标与人物坐标相减得到绝对坐标，传输玩家位置信息
 {
@@ -351,48 +448,7 @@ void MySecondScene::keyPressedDuration_A()//当按键返回为true时执行的函数
 		m_player->runAction(moveTo);
 	}
 	else {
-		auto moveTo1 = MoveTo::create(0, Vec2(start_Page->getPositionX() - offsetX, start_Page->getPositionY() - offsetY));
-		start_Page->runAction(moveTo1);
-
-		for (int i = 0; i < BRICK_AMOUNT; i++) {
-			auto moveTo2 = MoveTo::create(0, Vec2(brick->getChildByTag(BRICK_TAG + i)->getPositionX() - offsetX, brick->getChildByTag(BRICK_TAG + i)->getPositionY() - offsetY));
-			brick->getChildByTag(BRICK_TAG + i)->runAction(moveTo2);
-		}
-		for (int i = 0; i < GRASS_AMOUNT; i++) {
-			auto moveTo3 = MoveTo::create(0, Vec2(gress->getChildByTag(GRASS_TAG + i)->getPositionX() - offsetX, gress->getChildByTag(GRASS_TAG + i)->getPositionY() - offsetY));
-			gress->getChildByTag(GRASS_TAG + i)->runAction(moveTo3);
-		}
-		for (int i = 0; i < GUN1_AMOUNT; i++) {
-			if (gun1->getChildByTag(GUN1_TAG + i) != nullptr) {
-				auto moveTo4 = MoveTo::create(0, Vec2(gun1->getChildByTag(GUN1_TAG + i)->getPositionX() - offsetX, gun1->getChildByTag(GUN1_TAG + i)->getPositionY() - offsetY));
-				gun1->getChildByTag(GUN1_TAG + i)->runAction(moveTo4);
-			}
-
-		}
-		for (int i = 0; i < GUN2_AMOUNT; i++) {
-			if (gun2->getChildByTag(GUN2_TAG + i) != nullptr) {
-				auto moveTo5 = MoveTo::create(0, Vec2(gun2->getChildByTag(GUN2_TAG + i)->getPositionX() - offsetX, gun2->getChildByTag(GUN2_TAG + i)->getPositionY() - offsetY));
-				gun2->getChildByTag(GUN2_TAG + i)->runAction(moveTo5);
-			}
-
-		}
-		for (int i = 0; i < PILL_AMOUNT; i++) {
-			if (pill->getChildByTag(PILL_TAG + i) != nullptr) {
-				auto moveTo6 = MoveTo::create(0, Vec2(pill->getChildByTag(PILL_TAG + i)->getPositionX() - offsetX, pill->getChildByTag(PILL_TAG + i)->getPositionY() - offsetY));
-				pill->getChildByTag(PILL_TAG + i)->runAction(moveTo6);
-			}
-
-		}
-		for (int i = 0; i < MONSTER_AMOUNT; i++) {
-			auto moveTo7 = MoveTo::create(0, Vec2(vecMonster[i]->getPositionX() - offsetX, vecMonster[i]->getPositionY() - offsetY));
-			vecMonster[i]->runAction(moveTo7);
-		}
-
-		for (int i = 0; i < vecAIPlayer.size(); i++) {
-			auto moveBy = MoveBy::create(0, Vec2(-offsetX, -offsetY));
-			vecAIPlayer[i]->runAction(moveBy);
-		}
-
+		keyPressedDuration_Scene(offsetX, offsetY);
 	}
 }
 void MySecondScene::keyPressedDuration_D()
@@ -404,47 +460,7 @@ void MySecondScene::keyPressedDuration_D()
 		m_player->runAction(moveTo);
 	}
 	else {
-		auto moveTo1 = MoveTo::create(0, Vec2(start_Page->getPositionX() - offsetX, start_Page->getPositionY() - offsetY));
-		start_Page->runAction(moveTo1);
-
-		for (int i = 0; i < BRICK_AMOUNT; i++) {
-			auto moveTo2 = MoveTo::create(0, Vec2(brick->getChildByTag(BRICK_TAG + i)->getPositionX() - offsetX, brick->getChildByTag(BRICK_TAG + i)->getPositionY() - offsetY));
-			brick->getChildByTag(BRICK_TAG + i)->runAction(moveTo2);
-		}
-		for (int i = 0; i < GRASS_AMOUNT; i++) {
-			auto moveTo3 = MoveTo::create(0, Vec2(gress->getChildByTag(GRASS_TAG + i)->getPositionX() - offsetX, gress->getChildByTag(GRASS_TAG + i)->getPositionY() - offsetY));
-			gress->getChildByTag(GRASS_TAG + i)->runAction(moveTo3);
-		}
-		for (int i = 0; i < GUN1_AMOUNT; i++) {
-			if (gun1->getChildByTag(GUN1_TAG + i) != nullptr) {
-				auto moveTo4 = MoveTo::create(0, Vec2(gun1->getChildByTag(GUN1_TAG + i)->getPositionX() - offsetX, gun1->getChildByTag(GUN1_TAG + i)->getPositionY() - offsetY));
-				gun1->getChildByTag(GUN1_TAG + i)->runAction(moveTo4);
-			}
-
-		}
-		for (int i = 0; i < GUN2_AMOUNT; i++) {
-			if (gun2->getChildByTag(GUN2_TAG + i) != nullptr) {
-				auto moveTo5 = MoveTo::create(0, Vec2(gun2->getChildByTag(GUN2_TAG + i)->getPositionX() - offsetX, gun2->getChildByTag(GUN2_TAG + i)->getPositionY() - offsetY));
-				gun2->getChildByTag(GUN2_TAG + i)->runAction(moveTo5);
-			}
-
-		}
-		for (int i = 0; i < PILL_AMOUNT; i++) {
-			if (pill->getChildByTag(PILL_TAG + i) != nullptr) {
-				auto moveTo6 = MoveTo::create(0, Vec2(pill->getChildByTag(PILL_TAG + i)->getPositionX() - offsetX, pill->getChildByTag(PILL_TAG + i)->getPositionY() - offsetY));
-				pill->getChildByTag(PILL_TAG + i)->runAction(moveTo6);
-			}
-
-		}
-		for (int i = 0; i < MONSTER_AMOUNT; i++) {
-			auto moveTo7 = MoveTo::create(0, Vec2(vecMonster[i]->getPositionX() - offsetX, vecMonster[i]->getPositionY() - offsetY));
-			vecMonster[i]->runAction(moveTo7);
-		}
-
-		for (int i = 0; i < vecAIPlayer.size(); i++) {
-			auto moveBy = MoveBy::create(0, Vec2(-offsetX, -offsetY));
-			vecAIPlayer[i]->runAction(moveBy);
-		}
+		keyPressedDuration_Scene(offsetX, offsetY);
 	}
 }
 void MySecondScene::keyPressedDuration_W()
@@ -456,47 +472,7 @@ void MySecondScene::keyPressedDuration_W()
 		m_player->runAction(moveTo);
 	}
 	else {
-		auto moveTo1 = MoveTo::create(0, Vec2(start_Page->getPositionX() - offsetX, start_Page->getPositionY() - offsetY));
-		start_Page->runAction(moveTo1);
-
-		for (int i = 0; i < BRICK_AMOUNT - 1; i++) {
-			auto moveTo2 = MoveTo::create(0, Vec2(brick->getChildByTag(BRICK_TAG + i)->getPositionX() - offsetX, brick->getChildByTag(BRICK_TAG + i)->getPositionY() - offsetY));
-			brick->getChildByTag(BRICK_TAG + i)->runAction(moveTo2);
-		}
-		for (int i = 0; i < GRASS_AMOUNT; i++) {
-			auto moveTo3 = MoveTo::create(0, Vec2(gress->getChildByTag(GRASS_TAG + i)->getPositionX() - offsetX, gress->getChildByTag(GRASS_TAG + i)->getPositionY() - offsetY));
-			gress->getChildByTag(GRASS_TAG + i)->runAction(moveTo3);
-		}
-		for (int i = 0; i < GUN1_AMOUNT; i++) {
-			if (gun1->getChildByTag(GUN1_TAG + i) != nullptr) {
-				auto moveTo4 = MoveTo::create(0, Vec2(gun1->getChildByTag(GUN1_TAG + i)->getPositionX() - offsetX, gun1->getChildByTag(GUN1_TAG + i)->getPositionY() - offsetY));
-				gun1->getChildByTag(GUN1_TAG + i)->runAction(moveTo4);
-			}
-
-		}
-		for (int i = 0; i < GUN2_AMOUNT; i++) {
-			if (gun2->getChildByTag(GUN2_TAG + i) != nullptr) {
-				auto moveTo5 = MoveTo::create(0, Vec2(gun2->getChildByTag(GUN2_TAG + i)->getPositionX() - offsetX, gun2->getChildByTag(GUN2_TAG + i)->getPositionY() - offsetY));
-				gun2->getChildByTag(GUN2_TAG + i)->runAction(moveTo5);
-			}
-
-		}
-		for (int i = 0; i < PILL_AMOUNT; i++) {
-			if (pill->getChildByTag(PILL_TAG + i) != nullptr) {
-				auto moveTo6 = MoveTo::create(0, Vec2(pill->getChildByTag(PILL_TAG + i)->getPositionX() - offsetX, pill->getChildByTag(PILL_TAG + i)->getPositionY() - offsetY));
-				pill->getChildByTag(PILL_TAG + i)->runAction(moveTo6);
-			}
-
-		}
-		for (int i = 0; i < MONSTER_AMOUNT; i++) {
-			auto moveTo7 = MoveTo::create(0, Vec2(vecMonster[i]->getPositionX() - offsetX, vecMonster[i]->getPositionY() - offsetY));
-			vecMonster[i]->runAction(moveTo7);
-		}
-
-		for (int i = 0; i < vecAIPlayer.size(); i++) {
-			auto moveBy = MoveBy::create(0, Vec2(-offsetX, -offsetY));
-			vecAIPlayer[i]->runAction(moveBy);
-		}
+		keyPressedDuration_Scene(offsetX, offsetY);
 	}
 }
 void MySecondScene::keyPressedDuration_S()
@@ -508,48 +484,7 @@ void MySecondScene::keyPressedDuration_S()
 		m_player->runAction(moveTo);
 	}
 	else {
-		auto moveBy = MoveBy::create(0, Vec2(-offsetX, -offsetY));
-		auto moveTo1 = MoveTo::create(0, Vec2(start_Page->getPositionX() - offsetX, start_Page->getPositionY() - offsetY));
-		start_Page->runAction(moveTo1);
-
-		for (int i = 0; i < BRICK_AMOUNT; i++) {
-			auto moveTo2 = MoveTo::create(0, Vec2(brick->getChildByTag(BRICK_TAG + i)->getPositionX() - offsetX, brick->getChildByTag(BRICK_TAG + i)->getPositionY() - offsetY));
-			brick->getChildByTag(BRICK_TAG + i)->runAction(moveTo2);
-		}
-		for (int i = 0; i < GRASS_AMOUNT; i++) {
-			auto moveTo3 = MoveTo::create(0, Vec2(gress->getChildByTag(GRASS_TAG + i)->getPositionX() - offsetX, gress->getChildByTag(GRASS_TAG + i)->getPositionY() - offsetY));
-			gress->getChildByTag(GRASS_TAG + i)->runAction(moveTo3);
-		}
-		for (int i = 0; i < GUN1_AMOUNT; i++) {
-			if (gun1->getChildByTag(GUN1_TAG + i) != nullptr) {
-				auto moveTo4 = MoveTo::create(0, Vec2(gun1->getChildByTag(GUN1_TAG + i)->getPositionX() - offsetX, gun1->getChildByTag(GUN1_TAG + i)->getPositionY() - offsetY));
-				gun1->getChildByTag(GUN1_TAG + i)->runAction(moveTo4);
-			}
-
-		}
-		for (int i = 0; i < GUN2_AMOUNT; i++) {
-			if (gun2->getChildByTag(GUN2_TAG + i) != nullptr) {
-				auto moveTo5 = MoveTo::create(0, Vec2(gun2->getChildByTag(GUN2_TAG + i)->getPositionX() - offsetX, gun2->getChildByTag(GUN2_TAG + i)->getPositionY() - offsetY));
-				gun2->getChildByTag(GUN2_TAG + i)->runAction(moveTo5);
-			}
-
-		}
-		for (int i = 0; i < PILL_AMOUNT; i++) {
-			if (pill->getChildByTag(PILL_TAG + i) != nullptr) {
-				auto moveTo6 = MoveTo::create(0, Vec2(pill->getChildByTag(PILL_TAG + i)->getPositionX() - offsetX, pill->getChildByTag(PILL_TAG + i)->getPositionY() - offsetY));
-				pill->getChildByTag(PILL_TAG + i)->runAction(moveTo6);
-			}
-
-		}
-		for (int i = 0; i < MONSTER_AMOUNT; i++) {
-			auto moveTo7 = MoveTo::create(0, Vec2(vecMonster[i]->getPositionX() - offsetX, vecMonster[i]->getPositionY() - offsetY));
-			vecMonster[i]->runAction(moveTo7);
-		}
-
-		for (int i = 0; i < vecAIPlayer.size(); i++) {
-			auto moveBy = MoveBy::create(0, Vec2(-offsetX, -offsetY));
-			vecAIPlayer[i]->runAction(moveBy);
-		}
+		keyPressedDuration_Scene(offsetX, offsetY);
 	}
 }
 
@@ -557,30 +492,103 @@ bool MySecondScene::onTouchBegan(Touch* touch, Event* unused_event) {
 	Vec2 touchLocation = touch->getLocation();
 	Vec2 offset = touchLocation - m_player->getPosition();
 
-	// 3.在玩家所在的位置创建一个飞镖，将其添加到场景中。
-	auto projectile = Sprite::create("6.png");
-	projectile->setPosition(m_player->getPosition());
+	// 3.在玩家所在的位置创建一个，将其添加到场景中。
+	if (guntype==1||guntype==2) {
+		
+		if (guntype == 1) {
+			if (!m_player->bullet2_is_empty())
+			{
+				m_player->lose_bullet2();
+			    m_player->print_rest_bullet2(BULLET2);
+			    bullet = Sprite::create("bullet1.png");
+		        bullet->setPosition(m_player->getPosition());
+			    auto physicsBody = PhysicsBody::createBox(bullet->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
+	            physicsBody->setDynamic(false);
+	            physicsBody->setContactTestBitmask(0xFFFFFFFF);
+	            bullet->setPhysicsBody(physicsBody);
+	            bullet->setTag(PLAYER_BULLET_TAG);
+	            this->addChild(bullet);
+			    // 将偏移量转化为单位向量，即长度为1的向量。
+	            offset.normalize();
+	            // 将其乘以1000，你就获得了一个指向用户触屏方向的长度为1000的向量。为什么是1000呢？因为长度应当足以超过当前分辨率下屏幕的边界。
+	            auto shootAmount = offset * 125;
+	            // 将此向量添加到子弹的位置上去，这样你就有了一个目标位置。
+	            auto realDest = shootAmount + bullet->getPosition();
+                // 创建一个动作，将子弹在2秒内移动到目标位置，然后将它从场景中移除。
+	            auto actionMove = MoveTo::create(0.3f, realDest);
+	            auto actionRemove = RemoveSelf::create();
+	            bullet->runAction(Sequence::create(actionMove, actionRemove, nullptr));
+		    }
+			
+		}
+		else {
+			if(!m_player->bullet1_is_empty())
+			{
+				m_player->lose_bullet1();
+			m_player->print_rest_bullet1(BULLET1);
+			bullet = Sprite::create("bullet2.png");
+			bullet->setPosition(m_player->getPosition());
+			auto physicsBody = PhysicsBody::createBox(bullet->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
+			physicsBody->setDynamic(false);
+			physicsBody->setContactTestBitmask(0xFFFFFFFF);
+			bullet->setPhysicsBody(physicsBody);
+			bullet->setTag(PLAYER_BULLET_TAG);
+			this->addChild(bullet);
+			// 将偏移量转化为单位向量，即长度为1的向量。
+			offset.normalize();
+			// 将其乘以1000，你就获得了一个指向用户触屏方向的长度为1000的向量。为什么是1000呢？因为长度应当足以超过当前分辨率下屏幕的边界。
+			auto shootAmount = offset * 125;
+			// 将此向量添加到子弹的位置上去，这样你就有了一个目标位置。
+			auto realDest = shootAmount + bullet->getPosition();
+			// 创建一个动作，将子弹在2秒内移动到目标位置，然后将它从场景中移除。
+			auto actionMove = MoveTo::create(1.6f, realDest);
+			auto actionRemove = RemoveSelf::create();
+			bullet->runAction(Sequence::create(actionMove, actionRemove, nullptr));
 
-	// Add projectile's physicsBody
-	auto physicsBody = PhysicsBody::createBox(projectile->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
-	physicsBody->setDynamic(false);
-	physicsBody->setContactTestBitmask(0xFFFFFFFF);
-	projectile->setPhysicsBody(physicsBody);
-	projectile->setTag(PLAYER_BULLET_TAG);
+			auto bullet2= Sprite::create("bullet2.png");
+			bullet2->setPosition(m_player->getPosition());
+			auto physicsBody1 = PhysicsBody::createBox(bullet2->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
+			physicsBody1->setDynamic(false);
+			physicsBody1->setContactTestBitmask(0xFFFFFFFF);
+			bullet2->setPhysicsBody(physicsBody1);
+			bullet2->setTag(PLAYER_BULLET_TAG);
+			this->addChild(bullet2);
 
-	this->addChild(projectile);
+			auto bullet3 = Sprite::create("bullet2.png");
+			bullet3->setPosition(m_player->getPosition());
+			auto physicsBody2 = PhysicsBody::createBox(bullet3->getContentSize(), PhysicsMaterial(0.0f, 0.0f, 0.0f));
+			physicsBody2->setDynamic(false);
+			physicsBody2->setContactTestBitmask(0xFFFFFFFF);
+			bullet3->setPhysicsBody(physicsBody2);
+			bullet3->setTag(PLAYER_BULLET_TAG);
+			this->addChild(bullet3);
+			//向量转化 有点小复杂
+			auto side_bullet1 = Vec2(bullet->getPositionX(), bullet->getPositionY());
+			auto side_bullet2 = Vec2(bullet->getPositionX(), bullet->getPositionY());
+			
+			auto Dest1 = shootAmount + side_bullet1;
+			auto Dest2 = shootAmount + side_bullet2;
 
-	// 4.将偏移量转化为单位向量，即长度为1的向量。
-	offset.normalize();
-	// 将其乘以1000，你就获得了一个指向用户触屏方向的长度为1000的向量。为什么是1000呢？因为长度应当足以超过当前分辨率下屏幕的边界。
-	auto shootAmount = offset * 125;
-	// 将此向量添加到飞镖的位置上去，这样你就有了一个目标位置。
-	auto realDest = shootAmount + projectile->getPosition();
+			auto realDest1 = Vec2(Dest1.x -m_player->getPositionX() + (Dest1.y - m_player->getPositionY()) / 2, Dest1.y - m_player->getPositionY() +( Dest1.x - m_player->getPositionX()) / 2);
+			auto realDest2 = Vec2(Dest2.x - m_player->getPositionX() - (Dest2.y - m_player->getPositionY()) / 2, Dest2.y - m_player->getPositionY() - (Dest2.x- m_player->getPositionX()) / 2);
 
-	// 5.创建一个动作，将飞镖在2秒内移动到目标位置，然后将它从场景中移除。
-	auto actionMove = MoveTo::create(0.3f, realDest);
-	auto actionRemove = RemoveSelf::create();
-	projectile->runAction(Sequence::create(actionMove, actionRemove, nullptr));
+			realDest1.normalize();
+			auto realDest11 = realDest1 * 125+bullet2->getPosition();
 
+			realDest2.normalize();
+			auto realDest22 = realDest2 * 125+bullet3->getPosition();
+
+			auto actionMove1 = MoveTo::create(1.6f, realDest11);
+			auto actionRemove1 = RemoveSelf::create();
+			bullet2->runAction(Sequence::create(actionMove1, actionRemove1, nullptr));
+			
+			auto actionMove2 = MoveTo::create(1.6f, realDest22);
+			auto actionRemove2 = RemoveSelf::create();
+			bullet3->runAction(Sequence::create(actionMove2, actionRemove2, nullptr));
+}
+			
+
+		}
+	}
 	return true;
 }

@@ -30,14 +30,21 @@ public:
     
     int GetScore();
     void printScore(Label*Score);
+    void Player::gain_bullet1();
+    void Player::gain_bullet2();
+    void Player::lose_bullet1();
+    void Player::lose_bullet2();
+    void Player::print_rest_bullet1(Label* BULLET1);
+    void Player::print_rest_bullet2(Label* BULLET2);
     void isHit();
     void alter_blood(Sprite* Blood);
     void AddHP();
-    void ChangeGunType(const int type);
+    int ChangeGunType(const int type);
     void AddCartridgeAmount();
     void ChangeCartridge(); //换弹
     bool isDead();
-
+    bool Player::bullet1_is_empty();
+    bool Player::bullet2_is_empty();
     int queryscore();
 
 private:
@@ -46,12 +53,13 @@ private:
     //Text* m_scorelab;    //分数标签
     //LoadingBar m_hpbar; //血量条
 
-    int score = 0;         //分数
+    int score = 0; 
+    int bullet1 = 0;
+    int bullet2 = 0;//分数
     int hp = PLAYER_HP; //血量
     int gunType = 0; //记录枪的类型
     int cartridgeAmount = 0; //拥有的弹夹量
     int bulletAmount = 0; //现使用弹夹内剩余子弹数
-
     bool hasDead = false;
 };
 

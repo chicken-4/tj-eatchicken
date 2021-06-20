@@ -33,6 +33,7 @@ public:
     void Wait();
     void Move(cocos2d::Sprite* player); //靠近玩家
     void Attack(cocos2d::Sprite* player); //攻击玩家
+    void Stop(const bool flag);
 
     void isHit();
     bool isDead();
@@ -46,6 +47,7 @@ private:
     const float distanceForAttack = 100; //与子弹射程相同
     const float speed = 0.5; //移动速度（每0.5秒）
     bool shoot = true;
+    bool stop = false;
     int hp = MONSTER_HP; //血量
     cocos2d::Scene* myScene;
     cocos2d::Sprite* background;

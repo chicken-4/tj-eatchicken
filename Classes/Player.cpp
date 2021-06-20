@@ -68,8 +68,55 @@ int Player::GetScore()
 
 void Player::printScore(Label*Score)
 {
-    Score->setString((cocos2d::StringUtils::format("%2d", score)));
+    
+    Score->setString((cocos2d::StringUtils::format("%3d", score)));
 }
+
+void Player::print_rest_bullet1(Label* BULLET1)
+{
+    BULLET1->setString((cocos2d::StringUtils::format("%3d", bullet1)));
+}
+void Player::print_rest_bullet2(Label* BULLET2)
+{
+    BULLET2->setString((cocos2d::StringUtils::format("%3d", bullet2)));
+}
+
+void Player::lose_bullet1()
+{
+    bullet1--;
+}
+
+void Player::lose_bullet2()
+{
+    bullet2--;
+}
+
+void Player::gain_bullet1()
+{
+    bullet1 = bullet1 + 10;
+}
+
+void Player::gain_bullet2()
+{
+    bullet2 = bullet2 + 10;
+}
+
+bool Player::bullet1_is_empty()
+{
+    if (bullet1 <= 0) {
+        return true;
+    }
+    return false;
+}
+
+bool Player::bullet2_is_empty()
+{
+    if (bullet2 <= 0) {
+        return true;
+    }
+    return false;
+}
+
 
 void Player::isHit()
 {
@@ -81,12 +128,12 @@ void Player::isHit()
 
 void Player::alter_blood(Sprite* Blood)
 {
-    Blood->setContentSize(Size(9*hp,80));
+    Blood->setContentSize(Size(9 * hp, 80));
 }
 
 bool Player::isDead()
 {
-    if (hp <= 0) 
+    if (hp <= 0)
         return true;
     return false;
 }
@@ -107,13 +154,14 @@ void Player::AddHP()
 }
 
 //0-无枪 1-一次发射一颗子弹 2-一次发射三颗子弹
-void Player::ChangeGunType(const int type)
+int Player::ChangeGunType(const int type)
 {
     gunType = type;
     if (type != 0) {
         cartridgeAmount = ORIGINAL_CARTRIDGE_AMOUNT;
         bulletAmount = BULLET_IN_CARTRIDGE;
     }
+    return type;
 }
 
 void Player::AddCartridgeAmount()
