@@ -1,5 +1,4 @@
 #include "AIPlayer.h"
-#include"AnimationUtil.h"
 
 bool AIPlayer::init()
 {
@@ -58,21 +57,9 @@ void AIPlayer::Wait()
 void AIPlayer::Move(Monster* monster)
 {
 	auto offset = monster->getPosition() - this->getPosition();
-	if (stop) {
-		if (i == 1) {
-			offset = Vec2(2 * offset.x, 0);
-		}
-		else if (i == 0) {
-			offset = Vec2(0, 2 * offset.y);
-		}
-	}
 	auto destination = offset * speed / distanceFromMonster;
 	auto Action = cocos2d::MoveBy::create(0.5, destination);
 	this->runAction(Action);
-}
-
-void AIPlayer::Avoid_brick(int direction) {
-	i = direction;
 }
 
 void AIPlayer::Attack(Monster* monster)
@@ -108,41 +95,30 @@ void AIPlayer::Attack(Monster* monster)
 		this->scheduleOnce(changeShoot, 0.3, "changeShoot"); //每0.3秒发射一颗子弹
 	}
 
-	if (!stop) {
-		//小范围移动躲避敌人攻击
-		if (moveWhenAttack) {
-			moveWhenAttack = !moveWhenAttack;
+	//小范围移动躲避敌人攻击
+	if (moveWhenAttack) {
+		moveWhenAttack = !moveWhenAttack;
 
-			float random = CCRANDOM_0_1();
-			if (random < 0.5) {
-				auto moveRight = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(speed * 30, 0));
-				auto moveLeft = cocos2d::MoveBy::create(1.0, cocos2d::Vec2(-speed * 60, 0));
-				auto moveBack = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(speed * 30, 0));
-				this->runAction(cocos2d::Sequence::create(moveRight, moveLeft, moveBack, nullptr));
-			}
-			else {
-				auto moveUp = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(0, speed * 30));
-				auto moveDown = cocos2d::MoveBy::create(1.0, cocos2d::Vec2(0, -speed * 60));
-				auto moveBack = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(0, speed * 30));
-				this->runAction(cocos2d::Sequence::create(moveUp, moveDown, moveBack, nullptr));
-			}
-
-			auto change = [this](float) {
-				moveWhenAttack = !moveWhenAttack;
-			};
-			this->scheduleOnce(change, 2.0, "change"); //两秒（即动画完毕）后再来一次
+		float random = CCRANDOM_0_1();
+		if (random < 0.5) {
+			auto moveRight = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(speed * 30, 0));
+			auto moveLeft = cocos2d::MoveBy::create(1.0, cocos2d::Vec2(-speed * 60, 0));
+			auto moveBack = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(speed * 30, 0));
+			this->runAction(cocos2d::Sequence::create(moveRight, moveLeft, moveBack, nullptr));
 		}
+		else {
+			auto moveUp = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(0, speed * 30));
+			auto moveDown = cocos2d::MoveBy::create(1.0, cocos2d::Vec2(0, -speed * 60));
+			auto moveBack = cocos2d::MoveBy::create(0.5, cocos2d::Vec2(0, speed * 30));
+			this->runAction(cocos2d::Sequence::create(moveUp, moveDown, moveBack, nullptr));
+		}
+
+		auto change = [this](float) {
+			moveWhenAttack = !moveWhenAttack;
+		};
+		this->scheduleOnce(change, 2.0, "change"); //两秒（即动画完毕）后再来一次
 	}
 }
-
-void AIPlayer::Stop(const bool flag)
-{
-	stop = flag;
-	if (flag) {
-		stopAllActions();
-	}
-}
-
 
 void AIPlayer::GetScore()
 {

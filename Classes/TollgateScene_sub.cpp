@@ -18,7 +18,7 @@ void TollgateScene::initBG()
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 
 	//大地图
-	start_Page = Sprite::create("startpage.png");
+	start_Page = Sprite::create("big2xx.png");
 	start_Page->setPosition(0, 0);
 	this->addChild(start_Page, 0);
 
@@ -27,22 +27,6 @@ void TollgateScene::initBG()
 
 void TollgateScene::initBeginning()
 {
-	bird = Sprite:: create("0player.png");
-	bird->setPosition(125, 110);
-	bird->setScale(4);
-	this->addChild(bird);
-
-	auto bird_change = Menu::create();
-	auto change = Label::create();
-	change->setString("Click To Change");
-	auto birdChange = MenuItemLabel::create(change, CC_CALLBACK_1(TollgateScene::ChangeImageToBird, this));
-	//创建好了菜单条目，就需要加入菜单中，所以下面就是创建菜单
-	birdChange->setPosition(Vec2(-110, -110));
-	birdChange->setScale(1.0);
-	bird_change->addChild(birdChange);
-	//把菜单添加到MyFirstScene层中
-	this->addChild(bird_change);
-
 	auto label1 = Label::create();// = Label::createWithSystemFont("START GAME", "fonts/arial.ttf", 30);
 	label1->setString("START GAME");
 	label1->setScale(1.0);
@@ -92,7 +76,11 @@ void TollgateScene::initBeginning()
 	POBG->setPosition(Vec2(235, 250));
 	this->addChild(POBG);
 
-	
+	m_player = Player::create();
+	m_player->bindSprite(Sprite::create("11.png"));
+	m_player->setScale(4.0);
+	m_player->setPosition(Vec2(110, 70));
+	this->addChild(m_player);
 
 	auto label4 = Label::create();// = Label::createWithSystemFont("START GAME", "fonts/arial.ttf", 30);
 	label4->setString("ENTER ROOM");

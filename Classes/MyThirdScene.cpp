@@ -24,7 +24,7 @@ void MyThirdScene::EnterFirstScene(Ref* pSender)
 void MyThirdScene::EnterSecondScene(Ref* pSender)
 {
 	//跳转到主地图，记得包含第一个场景的头文件：MyFirstScene.h
-	Director::getInstance()->replaceScene(MySecondScene::createScene(0));
+	Director::getInstance()->replaceScene(MySecondScene::createScene());
 }
 void MyThirdScene::EXIT(Ref* pSender)
 {
