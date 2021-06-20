@@ -28,7 +28,7 @@ public:
     virtual void update(float dt);
     cocos2d::Node* myPoint;
 private:
-    std::vector<cocos2d::Sprite*> vecPlayers;
+    std::vector<Entity*> vecPlayers;
     float distanceFromPlayer;
     const float distanceForMove = 150;
     const float speed = 4; //ÒÆ¶¯ËÙ¶È

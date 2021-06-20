@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef __Player_H__
 #define __Player_H__
 
@@ -73,5 +72,6 @@ private:
     int bullet1amount=30;
     int bullet2amount=30;
 }; 
+
 
 #endif

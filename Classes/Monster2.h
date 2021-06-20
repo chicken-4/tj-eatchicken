@@ -33,11 +33,11 @@ public:
     std::map<int, Missile*> GetMapMissile();
 private:
     std::vector<Missile*> vecMissiles;
-    std::vector<cocos2d::Sprite*> vecTargets;
+    std::vector<Entity*> vecTargets;
     std::map<int, Missile*> mapMissileTag;
     cocos2d::Scene* myScene;
     cocos2d::Sprite* background;
-    cocos2d::Sprite* target;
+    Entity* target;
     int hp = DUCK_HP; //血量
 };
 
@@ -47,7 +47,7 @@ public:
     virtual bool init();
     CREATE_FUNC(Missile);
 
-    void BindTarget(cocos2d::Sprite* sprite);//绑定攻击对象
+    void BindTarget(Entity* sprite);//绑定攻击对象
     void BindDuck(MonsterDuck* duck);
 
     void Move(); //靠近玩家
@@ -55,7 +55,7 @@ public:
 
     virtual void update(float dt);
 private:
-    cocos2d::Sprite* target = NULL;
+    Entity* target = NULL;
     MonsterDuck* myDuck;
     const float speed = 3; //移动速度
     bool inUse = true;

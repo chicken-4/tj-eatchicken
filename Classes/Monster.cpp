@@ -47,10 +47,12 @@ cocos2d::Sprite* Monster::GetDistance()
 	float tempDistance;
 	cocos2d::Vec2 offset;
 	for (int i = 0; i < vecPlayers.size(); i++) {
-		offset = vecPlayers[i]->getPosition() - this->getPosition();
-		if (distanceFromPlayer > (tempDistance = sqrt(offset.x * offset.x + offset.y * offset.y))) {
-			distanceFromPlayer = tempDistance;
-			closestPlayer = vecPlayers[i];//得到离得最近的玩家
+		if (vecPlayers[i]->GetVisible()) {
+			offset = vecPlayers[i]->getPosition() - this->getPosition();
+			if (distanceFromPlayer > (tempDistance = sqrt(offset.x * offset.x + offset.y * offset.y))) {
+				distanceFromPlayer = tempDistance;
+				closestPlayer = vecPlayers[i];//得到离得最近的玩家
+			}
 		}
 	}
 	return closestPlayer;
@@ -162,10 +164,10 @@ bool Monster::isDead()
 void Monster::update(float dt)
 {
 	cocos2d::Sprite* closestPlayer = GetDistance();
-	if (isGoingToMove()) {
+	if (closestPlayer != NULL&&isGoingToMove()) {
 		Move(closestPlayer);
 	}
-	else if (isGoingToAttack()) {
+	else if (closestPlayer != NULL&&isGoingToAttack()) {
 		Attack(closestPlayer);
 	}
 	else {

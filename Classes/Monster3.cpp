@@ -3,7 +3,6 @@
 bool Ghost::init()
 {
 	myPoint = Node::create();
-//	this->addChild(myPoint);
 	this->scheduleUpdate();
 	return true;
 }
@@ -34,10 +33,12 @@ cocos2d::Sprite* Ghost::GetDistance()
 	float tempDistance;
 	cocos2d::Vec2 offset;
 	for (int i = 0; i < vecPlayers.size(); i++) {
-		offset = vecPlayers[i]->getPosition() - myPoint->getPosition();
-		if (distanceFromPlayer > (tempDistance = sqrt(offset.x * offset.x + offset.y * offset.y))) {
-			distanceFromPlayer = tempDistance;
-			closestPlayer = vecPlayers[i];//得到离得最近的玩家
+		if (vecPlayers[i]->GetVisible()) {
+			offset = vecPlayers[i]->getPosition() - myPoint->getPosition();
+			if (distanceFromPlayer > (tempDistance = sqrt(offset.x * offset.x + offset.y * offset.y))) {
+				distanceFromPlayer = tempDistance;
+				closestPlayer = vecPlayers[i];//得到离得最近的玩家
+			}
 		}
 	}
 	return closestPlayer;
@@ -50,7 +51,6 @@ bool Ghost::isGoingToMove()
 
 void Ghost::Wait()
 {
-
 	auto offset = myPoint->getPosition() - this->getPosition(); //回到据点
 	auto destination = offset * speed / 100;
 	auto Action = cocos2d::MoveBy::create(0.2, destination);
@@ -59,18 +59,16 @@ void Ghost::Wait()
 
 void Ghost::Move(cocos2d::Sprite* player)
 {
-
 	auto offset = player->getPosition() - this->getPosition();
 	auto destination = offset * speed / distanceFromPlayer;
 	auto Action = cocos2d::MoveBy::create(0.2, destination);
 	this->runAction(Action);
-
 }
 
 void Ghost::update(float dt)
 {
 	cocos2d::Sprite* closestPlayer = GetDistance();
-	if (isGoingToMove()) {
+	if (closestPlayer != NULL && isGoingToMove()) {
 		Move(closestPlayer);
 	}
 	else {

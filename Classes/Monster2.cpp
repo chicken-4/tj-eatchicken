@@ -67,7 +67,6 @@ void MonsterDuck::isHit()
 
 bool MonsterDuck::isDead()
 {
-	//不会清内存 直接移远
 	if (0 >= hp) {
 		for (int i = 0; i < vecMissiles.size(); i++) {
 			vecMissiles[i]->setPosition(10000, 10000);
@@ -96,7 +95,7 @@ bool Missile::init()
 	return true;
 }
 
-void Missile::BindTarget(cocos2d::Sprite* sprite)
+void Missile::BindTarget(Entity* sprite)
 {
 	target = sprite;
 }
@@ -108,12 +107,12 @@ void Missile::BindDuck(MonsterDuck* duck)
 
 void Missile::Move()
 {
-	if (inUse && target != NULL) {
+	if (inUse && target != NULL && target->GetVisible()) {
 		auto offset = target->getPosition() - this->getPosition(); //指向玩家
 		offset.normalize();
 		float radians = atan2(offset.y, -offset.x);
 		float degree = CC_RADIANS_TO_DEGREES(radians);
-		this->setRotation(degree+180);
+		this->setRotation(degree + 180);
 		auto destination = offset * speed;
 		auto Action = cocos2d::MoveBy::create(0.5, destination);
 		this->runAction(Action);

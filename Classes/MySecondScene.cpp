@@ -4,7 +4,6 @@
 #include"SceneManage.h"
 #include"TimeCounter.h"
 
-
 //场景的切换（主地图、最后排名、房间
 //初始主界面在tollgatescene
 
@@ -86,7 +85,7 @@ void MySecondScene::initBG()
 	river2->setPhysicsBody(physicsBody_river2);
 	river2->setTag(RIVER_TAG);
 	this->addChild(river2);
-	
+
 	start_Page = Sprite::create("startpage.png");
 	start_Page->setPosition(start_Page->getContentSize().width / 2 + 25, start_Page->getContentSize().height / 2);
 
@@ -98,7 +97,7 @@ void MySecondScene::initBG()
 	lake->setPhysicsBody(physicsBody_lake);
 	lake->setTag(RIVER_TAG);
 	this->addChild(lake);
-	
+
 	this->addChild(start_Page);
 
 	srand((unsigned int)time(NULL));
@@ -109,10 +108,10 @@ void MySecondScene::initBG()
 	{
 		Sprite* sprite = Sprite::create("bocket.png");
 		if (i >= 0 && i < 100) {
-            sprite->setPosition(Vec2(CCRANDOM_0_1() * (start_Page->getContentSize().width/2-300) + 100, CCRANDOM_0_1() * (start_Page->getContentSize().height/2 - 200) + 100));
+			sprite->setPosition(Vec2(CCRANDOM_0_1() * (start_Page->getContentSize().width / 2 - 300) + 100, CCRANDOM_0_1() * (start_Page->getContentSize().height / 2 - 200) + 100));
 		}
 		else if (i >= 100 && i < 200) {
-			sprite->setPosition(Vec2(CCRANDOM_0_1() * (start_Page->getContentSize().width / 2 -300) + 300+ start_Page->getContentSize().width / 2, CCRANDOM_0_1() * (start_Page->getContentSize().height / 2 - 200) + 100+start_Page->getContentSize().height / 2));
+			sprite->setPosition(Vec2(CCRANDOM_0_1() * (start_Page->getContentSize().width / 2 - 300) + 300 + start_Page->getContentSize().width / 2, CCRANDOM_0_1() * (start_Page->getContentSize().height / 2 - 200) + 100 + start_Page->getContentSize().height / 2));
 		}
 		else if (i >= 200 && i < 300) {
 			sprite->setPosition(Vec2(CCRANDOM_0_1() * (start_Page->getContentSize().width / 2 - 300) + 300 + start_Page->getContentSize().width / 2, CCRANDOM_0_1() * (start_Page->getContentSize().height / 2 - 200) + 100));
@@ -238,7 +237,7 @@ void MySecondScene::initBG()
 	this->addChild(bullet2);
 
 	addSomething = SpriteBatchNode::create("speed.png");
-	for (int i = 0; i < SPEED_AMOUNT+BULLET1LIMIT_AMOUNT+BULLET2LIMIT_AMOUNT; i++)
+	for (int i = 0; i < SPEED_AMOUNT + BULLET1LIMIT_AMOUNT + BULLET2LIMIT_AMOUNT; i++)
 	{
 		Sprite* sprite = Sprite::create("speed.png");
 		sprite->setPosition(Vec2(CCRANDOM_0_1() * (start_Page->getContentSize().width - 200) + 100, CCRANDOM_0_1() * (start_Page->getContentSize().height - 200) + 100));
@@ -285,20 +284,20 @@ void MySecondScene::initIF()
 	Small_map = Sprite::create("big2.png");
 	Small_map->setPosition(453 - Small_map->getContentSize().width / 2, 320 - Small_map->getContentSize().height / 2);
 	Small_map->setOpacity(120);
-	this->addChild(Small_map );
+	this->addChild(Small_map);
 
 	//小地图坐标
 	ball = Sprite::create("ball.png");
 	ball->setPosition(453 - Small_map->getContentSize().width / 2 - (start_Page->getPositionX() - m_player->getPositionX()) / 35, 320 - Small_map->getContentSize().height / 2 - (start_Page->getPositionY() - m_player->getPositionY()) / 35);
 	ball->setOpacity(100);
-	this->addChild(ball );
+	this->addChild(ball);
 
 	//血条
 	m_blood = Sprite::create("blood.png");
 	m_blood->setPosition(Vec2(110, 300));
 	m_blood->setScale(1, 1);
 	m_blood->setAnchorPoint(Vec2(0, 0.5));
-	m_blood->setColor(Color3B(0,220,0));
+	m_blood->setColor(Color3B(0, 220, 0));
 	this->addChild(m_blood);
 
 	//血条分隔线
@@ -342,7 +341,7 @@ void MySecondScene::initIF()
 	this->addChild(time_label);
 
 	//倒计时
-	Clock*timing = Clock::create();
+	Clock* timing = Clock::create();
 	timing->BindLabel(Label::create());
 	timing->setScale(1);
 	timing->setColor(Color3B(0, 0, 0));
@@ -414,7 +413,7 @@ void MySecondScene::update(float delta)
 			m_player->alter_blood(m_blood);
 		}
 	}
-	if ((m_player->isDead() && !hasDead)|| time<0||time==0) {
+	if ((m_player->isDead() && !hasDead) || time < 0 || time == 0) {
 		hasDead = true;
 		Sprite* back = Sprite::create("startpage.png");
 
@@ -434,7 +433,7 @@ void MySecondScene::update(float delta)
 		addChild(text, 30);
 
 		for (int i = 0; i < PLAYER_AMOUNT - 1; ++i) {
-			auto playerLabel = Label::createWithTTF(StringUtils::format("player%d", i) + StringUtils::format("     %d", vecAIPlayer[i]->queryscore()), "fonts/Marker Felt.ttf", 20);
+			auto playerLabel = Label::createWithTTF(StringUtils::format("player%d", i+1) + StringUtils::format("     %d", vecAIPlayer[i]->queryscore()), "fonts/Marker Felt.ttf", 20);
 			playerLabel->setPosition(240, 60 + 20 * i);
 			auto playerimage = Sprite::create((cocos2d::StringUtils::format("%1dplayer.png", i % 9)));
 			playerimage->setPosition(150, 60 + 20 * i);
@@ -558,9 +557,9 @@ void MySecondScene::keyPressedDuration_Scene(float offsetX, float offsetY)
 		}
 
 	}
-	for (int i = 0; i < SPEED_AMOUNT+BULLET1LIMIT_AMOUNT+BULLET2LIMIT_AMOUNT; i++) {
+	for (int i = 0; i < SPEED_AMOUNT + BULLET1LIMIT_AMOUNT + BULLET2LIMIT_AMOUNT; i++) {
 		if (addSomething->getChildByTag(SPEED_TAG + i) != nullptr) {
-			auto moveTo8 = MoveTo::create(0, Vec2(addSomething->getChildByTag(SPEED_TAG + i)->getPositionX() - offsetX,addSomething->getChildByTag(SPEED_TAG + i)->getPositionY() - offsetY));
+			auto moveTo8 = MoveTo::create(0, Vec2(addSomething->getChildByTag(SPEED_TAG + i)->getPositionX() - offsetX, addSomething->getChildByTag(SPEED_TAG + i)->getPositionY() - offsetY));
 			addSomething->getChildByTag(SPEED_TAG + i)->runAction(moveTo8);
 		}
 	}
@@ -606,8 +605,8 @@ void MySecondScene::keyPressedDuration_A()//当按键返回为true时执行的函数
 		m_player->runAction(moveTo);
 	}
 	else {
-		
-		keyPressedDuration_Scene(offsetX-2, offsetY);
+
+		keyPressedDuration_Scene(offsetX , offsetY);
 	}
 }
 void MySecondScene::keyPressedDuration_D()
@@ -619,7 +618,7 @@ void MySecondScene::keyPressedDuration_D()
 		m_player->runAction(moveTo);
 	}
 	else {
-		keyPressedDuration_Scene(offsetX+2, offsetY);
+		keyPressedDuration_Scene(offsetX , offsetY);
 	}
 }
 void MySecondScene::keyPressedDuration_W()
@@ -631,7 +630,7 @@ void MySecondScene::keyPressedDuration_W()
 		m_player->runAction(moveTo);
 	}
 	else {
-		keyPressedDuration_Scene(offsetX, offsetY+2);
+		keyPressedDuration_Scene(offsetX, offsetY );
 	}
 }
 void MySecondScene::keyPressedDuration_S()
@@ -643,7 +642,7 @@ void MySecondScene::keyPressedDuration_S()
 		m_player->runAction(moveTo);
 	}
 	else {
-		keyPressedDuration_Scene(offsetX, offsetY-2);
+		keyPressedDuration_Scene(offsetX, offsetY );
 	}
 }
 
@@ -893,8 +892,8 @@ void MySecondScene::addCircle(float dt) {
 		this->addChild(circle2);
 		circle++;
 	}
-	}
-	
+}
+
 
 //碰撞开始
 bool MySecondScene::onContactBegin(cocos2d::PhysicsContact& contact)
@@ -1218,12 +1217,14 @@ bool MySecondScene::onContactBegin(cocos2d::PhysicsContact& contact)
 			auto iter = mapPlayerTag.find(tagB);
 			if (iter != mapPlayerTag.end()) {
 				iter->second->getSprite()->setOpacity(50);
+				iter->second->SetVisible(false);
 			}
 		}
 		else if (GRASS_TAG <= tagB && GRASS_TAG + GRASS_AMOUNT > tagB && PLAYER_TAG <= tagA && PLAYER_TAG + PLAYER_AMOUNT > tagA) {
 			auto iter = mapPlayerTag.find(tagA);
 			if (iter != mapPlayerTag.end()) {
 				iter->second->getSprite()->setOpacity(50);
+				iter->second->SetVisible(false);
 			}
 		}
 		//AI玩家与草丛
@@ -1352,20 +1353,20 @@ bool MySecondScene::onContactBegin(cocos2d::PhysicsContact& contact)
 		}
 		//玩家与弹夹容量2提升道具
 		else if (BULLET2LIMIT_TAG <= tagA && BULLET2LIMIT_TAG + BULLET2LIMIT_AMOUNT > tagA && PLAYER_TAG <= tagB && PLAYER_TAG + PLAYER_AMOUNT > tagB) {
-		auto iter = mapPlayerTag.find(tagB);
-		if (iter != mapPlayerTag.end()) {
-			iter->second->addBullet2Amount();
-			iter->second->print_rest_bullet2(BULLET2);
-			nodeA->removeFromParentAndCleanup(true);
-		}
+			auto iter = mapPlayerTag.find(tagB);
+			if (iter != mapPlayerTag.end()) {
+				iter->second->addBullet2Amount();
+				iter->second->print_rest_bullet2(BULLET2);
+				nodeA->removeFromParentAndCleanup(true);
+			}
 		}
 		else if (BULLET2LIMIT_TAG <= tagB && BULLET2LIMIT_TAG + BULLET2LIMIT_AMOUNT > tagB && PLAYER_TAG <= tagA && PLAYER_TAG + PLAYER_AMOUNT > tagA) {
-		auto iter = mapPlayerTag.find(tagA);
-		if (iter != mapPlayerTag.end()) {
-			iter->second->addBullet2Amount();
-			iter->second->print_rest_bullet2(BULLET2);
-			nodeB->removeFromParentAndCleanup(true);
-		}
+			auto iter = mapPlayerTag.find(tagA);
+			if (iter != mapPlayerTag.end()) {
+				iter->second->addBullet2Amount();
+				iter->second->print_rest_bullet2(BULLET2);
+				nodeB->removeFromParentAndCleanup(true);
+			}
 		}
 	}
 	return true;
@@ -1412,8 +1413,8 @@ bool MySecondScene::onContactSeparate(cocos2d::PhysicsContact& contact)
 			auto iter = mapPlayerTag.find(tagB);
 			if (iter != mapPlayerTag.end()) {
 				if ((iter->second->getPosition().x >= lake->getPosition().x + lake->getContentSize().width / 2 || iter->second->getPosition().x <= lake->getPosition().x - lake->getContentSize().width / 2) || (iter->second->getPosition().y >= lake->getPosition().y + lake->getContentSize().height / 2 || iter->second->getPosition().y <= lake->getPosition().y - lake->getContentSize().height / 2))
-			    {
-				    iter->second->getSprite()->setOpacity(255);
+				{
+					iter->second->getSprite()->setOpacity(255);
 				}
 			}
 		}
@@ -1439,7 +1440,7 @@ bool MySecondScene::onContactSeparate(cocos2d::PhysicsContact& contact)
 		else if (RIVER_TAG == tagA && AIPLAYER_TAG <= tagB && AIPLAYER_TAG + PLAYER_AMOUNT > tagB) {
 			auto iter = mapAIPlayerTag.find(tagB);
 			if (iter != mapAIPlayerTag.end()) {
-				if ((iter->second->getPosition().x >= lake->getPosition().x + lake->getContentSize().width / 2 || iter->second->getPosition().x <= lake->getPosition().x - lake->getContentSize().width / 2) ||(iter->second->getPosition().y >= lake->getPosition().y + lake->getContentSize().height / 2 || iter->second->getPosition().y <= lake->getPosition().y - lake->getContentSize().height / 2))
+				if ((iter->second->getPosition().x >= lake->getPosition().x + lake->getContentSize().width / 2 || iter->second->getPosition().x <= lake->getPosition().x - lake->getContentSize().width / 2) || (iter->second->getPosition().y >= lake->getPosition().y + lake->getContentSize().height / 2 || iter->second->getPosition().y <= lake->getPosition().y - lake->getContentSize().height / 2))
 				{
 					iter->second->getSprite()->setOpacity(255);
 				}
@@ -1450,12 +1451,14 @@ bool MySecondScene::onContactSeparate(cocos2d::PhysicsContact& contact)
 			auto iter = mapPlayerTag.find(tagB);
 			if (iter != mapPlayerTag.end()) {
 				iter->second->getSprite()->setOpacity(255);
+				iter->second->SetVisible(true);
 			}
 		}
 		else if (GRASS_TAG <= tagB && GRASS_TAG + GRASS_AMOUNT > tagB && PLAYER_TAG <= tagA && PLAYER_TAG + PLAYER_AMOUNT > tagA) {
 			auto iter = mapPlayerTag.find(tagA);
 			if (iter != mapPlayerTag.end()) {
 				iter->second->getSprite()->setOpacity(255);
+				iter->second->SetVisible(true);
 			}
 		}
 		//AI玩家与草丛

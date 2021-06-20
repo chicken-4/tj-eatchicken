@@ -6,7 +6,6 @@
 #include"TimeCounter.h"
 
 
-
 //场景的切换（主地图、最后排名、房间
 //初始主界面在tollgatescene
 
@@ -49,7 +48,7 @@ bool MySecondScene::init()
 	initBG();
 	initIF();
 	initLABEL();
-	
+
 	this->schedule(CC_SCHEDULE_SELECTOR(MySecondScene::addCircle), 120);
 
 	m_player->setPosition(Vec2(240, 160));
@@ -57,15 +56,16 @@ bool MySecondScene::init()
 
 	//加入怪物和ai玩家
 	addMonstersAndAI(humanPlayerAmount);
+	
 
 	auto eventListener = EventListenerTouchOneByOne::create();
 	eventListener->onTouchBegan = CC_CALLBACK_2(MySecondScene::onTouchBegan, this);
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventListener, this);
-
+	
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> keyMap;
 
 	//键盘监听
-	auto listener = EventListenerKeyboard::create();
+	listener = EventListenerKeyboard::create();
 	listener->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event* event) {
 		if (keyCode == EventKeyboard::KeyCode::KEY_W) {
 			m_player->getSprite()->stopAllActions();
@@ -120,6 +120,203 @@ bool MySecondScene::init()
 				bagblock1->initWithFile("bagblock.png");
 				bagblock3->initWithFile("bagblock_ing.png");
 			}
+		}
+		if (keyCode == EventKeyboard::KeyCode::KEY_P) {
+			keys[EventKeyboard::KeyCode::KEY_A]=false;
+			keys[EventKeyboard::KeyCode::KEY_S]=false;
+			keys[EventKeyboard::KeyCode::KEY_W]=false;
+			keys[EventKeyboard::KeyCode::KEY_D]=false; 
+			//P进入聊天系统
+			listener->setEnabled(false);
+			speak = Label::create();
+			speak->setString(" ");
+			speak->setColor(Color3B(0, 0, 0));
+			speak->setPosition(250, 170);
+			this->addChild(speak);
+			auto please = Label::create();
+			please->setString("Please input word:");
+			please->setPosition(250, 190);
+			please->setScale(2);
+			please->setColor(Color3B(0, 0, 0));
+			this->addChild(please);
+
+			auto chat = Label::create();
+			chat->setString("CHAT:");
+			chat->setPosition(50, 200);
+			chat->setColor(Color3B(0, 0, 0));
+			this->addChild(chat);
+
+			auto speaklistener = EventListenerKeyboard::create();
+			speaklistener->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event* event) {
+				if (word.length() <= 10) {
+					if (keyCode == EventKeyboard::KeyCode::KEY_A) {
+						word = word + "a";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_B) {
+						word = word + "b";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_C) {
+						word = word + "c";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_D) {
+						word = word + "d";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_E) {
+						word = word + "e";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_F) {
+						word = word + "f";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_G) {
+						word = word + "g";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_H) {
+						word = word + "h";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_I) {
+						word = word + "i";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_J) {
+						word = word + "j";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_K) {
+						word = word + "k";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_L) {
+						word = word + "l";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_M) {
+						word = word + "m";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_N) {
+						word = word + "n";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_O) {
+						word = word + "o";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_P) {
+						word = word + "p";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_Q) {
+						word = word + "q";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_R) {
+						word = word + "r";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_S) {
+						word = word + "s";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_T) {
+						word = word + "t";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_U) {
+						word = word + "u";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_V) {
+						word = word + "v";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_W) {
+						word = word + "w";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_X) {
+						word = word + "x";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_Y) {
+						word = word + "y";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_Z) {
+						word = word + "z";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_1) {
+						word = word + "1";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_2) {
+						word = word + "2";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_3) {
+						word = word + "3";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_4) {
+						word = word + "4";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_5) {
+						word = word + "5";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_6) {
+						word = word + "6";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_7) {
+						word = word + "7";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_8) {
+						word = word + "8";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_9) {
+						word = word + "9";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_0) {
+						word = word + "0";
+						speak->setString(word);
+					}
+					else if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) {
+						word = word + " ";
+						speak->setString(word);
+					}
+				}
+				 if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
+						speak->setString("me:" + word);
+						speak->setOpacity(60);
+						speak->setAnchorPoint(Vec2(0, 0));
+						speak->setPosition(50, 180 + position);
+						position = position - 10;
+						word = " ";
+						please->removeFromParent();
+						this->getEventDispatcher()->removeEventListener(speaklistener);
+						listener->setEnabled(true);
+				 }
+				 else if (keyCode == EventKeyboard::KeyCode::KEY_BACKSPACE) {
+					 word = word.substr(0, word.length() - 1);
+					 speak->setString(word);
+					 
+				 }
+			
+			};
+			_eventDispatcher->addEventListenerWithSceneGraphPriority(speaklistener, this);
 		}
 	};
 

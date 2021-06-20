@@ -19,3 +19,13 @@ void Entity::bindSprite(Sprite* sprite)
 	m_sprite->setPosition(Vec2(size.width / 2, size.height / 2));
 	this->setContentSize(size);
 }
+
+bool Entity::GetVisible()
+{
+	return visible;
+}
+
+void Entity::SetVisible(const bool flag)
+{
+	visible = flag;
+}

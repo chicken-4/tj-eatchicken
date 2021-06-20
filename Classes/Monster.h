@@ -42,7 +42,7 @@ public:
 
     virtual void update(float dt);
 private:
-    std::vector<cocos2d::Sprite*> vecPlayers;
+    std::vector<Entity*> vecPlayers;
     int i=2;
     float distanceFromPlayer;
     const float distanceForMove = 500;

@@ -5,7 +5,8 @@
 #include "Monster.h"
 #include "Monster2.h"
 #include "Monster3.h"
-
+#include "string.h"
+using namespace std;
 
 #define BORDER_TAG   -10
 #define BRICK_TAG   -400
@@ -65,14 +66,17 @@ public:
 	cocos2d::SpriteBatchNode* bullet1;
 	cocos2d::SpriteBatchNode* bullet2;
 	cocos2d::SpriteBatchNode* addSomething;
-
 	cocos2d::SpriteBatchNode* pill;
+
+	EventListenerKeyboard* listener;
+	int position = 0;
+	string word=" ";
+	Label* speak;
 	void keyPressedDuration_W();
 	void keyPressedDuration_A();
 	void keyPressedDuration_S();
 	void keyPressedDuration_D();
 	void keyPressedDuration_Scene(float offsetX, float offsetY);
-
 	bool onContactBegin(cocos2d::PhysicsContact& contact);
 	bool onContactSeparate(cocos2d::PhysicsContact& contact);
 private:
@@ -127,7 +131,7 @@ private:
 	std::map<int, Ghost*> mapGhostTag;
 
 	Player* m_player;
-
+	
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> keys;
 };
 
@@ -209,4 +213,3 @@ public:
 	Label* POBG;
 };
 #endif*/
-
