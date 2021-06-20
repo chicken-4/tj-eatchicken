@@ -5,7 +5,7 @@
 #include "Monster.h"
 #include "Monster2.h"
 #include "Monster3.h"
-#include"Weapon.h"
+
 
 #define BORDER_TAG   -10
 #define BRICK_TAG   -400
@@ -23,11 +23,11 @@
 
 #define BRICK_AMOUNT  399
 #define GRASS_AMOUNT 200
-#define GUN1_AMOUNT  20
-#define GUN2_AMOUNT 20
-#define PILL_AMOUNT 30
-#define BULLET1_AMOUNT 35
-#define BULLET2_AMOUNT 35
+#define GUN1_AMOUNT  10
+#define GUN2_AMOUNT 10
+#define PILL_AMOUNT 20
+#define BULLET1_AMOUNT 20
+#define BULLET2_AMOUNT 20
 #define SPEED_AMOUNT 20
 #define BULLET1LIMIT_AMOUNT 5
 #define BULLET2LIMIT_AMOUNT 5
@@ -127,7 +127,6 @@ private:
 	std::map<int, Ghost*> mapGhostTag;
 
 	Player* m_player;
-	Weapon* m_weapon;
 
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> keys;
 };
